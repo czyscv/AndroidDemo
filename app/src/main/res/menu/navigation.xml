@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@mipmap/tag_home"
+        android:title="首页" />
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@mipmap/tag_search"
+        android:title="查找" />
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@mipmap/tag_list"
+        android:title="列表" />
+    <item
+        android:id="@+id/navigation_person"
+        android:icon="@mipmap/tad_people"
+        android:title="个人" />
+</menu>

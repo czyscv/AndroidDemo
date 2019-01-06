@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/login_register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/login_toolbar"
+        layout="@layout/activity_normal_toolbar" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/login_tabLayout"
+        app:tabIndicatorColor="@color/bg_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#d3d3d3"
+        android:orientation="vertical"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/login_viewpage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

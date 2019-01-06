@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_app">#2F77F1</color>
+    <color name="bg_toolbar">#008577</color>
+    <color name="bg_write">#ffffff</color>
+    <color name="bg_null">#00FFFFFF</color>
+    <color name="tab_checked">#ED6A2C</color>
+    <color name="tab_unchecked">#757575</color>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#ce1f28</color>
+</resources>
