@@ -1,2 +1,9 @@
-这是一个安卓的应用模板
+锘胯繖鏄竴涓畨鍗撶殑搴旂敤妯℃澘 鎴戜細灏濊瘯灏嗕粬寮�鍙戜负涓�涓畬鏁寸殑app绋嬪簭
+鍥炲彴鎺ュ彛鏉ヨ嚜鎴戠殑鏈嬪弸q843705423
+
 This is an Android application template
+
+
+I will try to develop it into a complete application
+
+Backstage interface from my friend q843705423 thanks

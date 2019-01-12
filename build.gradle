@@ -20,7 +20,6 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }//沉浸式体验的库
-        maven { url "https://jitpack.io" }//图片模糊
     }
 }
 

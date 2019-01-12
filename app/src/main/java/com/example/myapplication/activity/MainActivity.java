@@ -1,6 +1,8 @@
 package com.example.myapplication.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -25,8 +27,32 @@ public class MainActivity extends BaseActivity {
     private BottomNavigationView bottomNavigationView;
     private ViewPager viewPager;
     private MyFragmentAdapter mAdapter;//适配器
-    List<Fragment> list = new ArrayList<>();
+    private List<Fragment> list = new ArrayList<>();
     private MenuItem menuItem;
+
+    private static final int COMIC_DASHBOARD = 0x1111;
+    private Handler mainHandler = new Handler(){
+        @Override
+        public void handleMessage(Message message) {
+            if (message.what == COMIC_DASHBOARD ) {
+                //加载漫画列表
+                switch (message.obj.toString()){
+                    case "error":
+                        Toast.makeText(MainActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+                        break;
+                    case "updateUI":
+                        MainDashboardFragment mainDashboardFragment = (MainDashboardFragment)list.get(2);
+                        mainDashboardFragment.updateUI();
+                        break;
+                    case "updateOK":
+                        Toast.makeText(MainActivity.this, "刷新完成", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Toast.makeText(MainActivity.this, "网络错误",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +125,20 @@ public class MainActivity extends BaseActivity {
         });
         setRightTitleClickListener((view)->{
             //TODO
-            Toast.makeText(getApplicationContext(),"这里是设置",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this,"这里是设置",Toast.LENGTH_SHORT).show();
         });
+    }
+
+
+    //让下层fragment得到handler
+    public Handler getActivityHandler() {
+        return mainHandler;
+    }
+
+    //结束资源清理 防止内存溢出
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mainHandler.removeCallbacksAndMessages(null);
     }
 }

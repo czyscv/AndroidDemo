@@ -34,10 +34,10 @@ public class MyFragmentAdapter extends FragmentPagerAdapter {
             // TODO Auto-generated method stub
             return fragmentList.size();
         }
-    //此方法用来显示tab上的名字
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return titlelist.get(position % titlelist.size());
-    }
+        //此方法用来显示tab上的名字
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titlelist.get(position % titlelist.size());
+        }
     }
 

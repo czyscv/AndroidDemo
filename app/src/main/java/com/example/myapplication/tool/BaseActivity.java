@@ -1,26 +1,31 @@
 package com.example.myapplication.tool;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
+
 import crossoverone.statuslib.StatusUtil;
 
 public class BaseActivity extends AppCompatActivity {
-    /*Toolbar*/
+    /*工具栏*/
     private BaseToolbar toolBar;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //基类设置默认值,这里是非沉浸,状态栏颜色值#878787,字体颜色为黑色。
+        //基类设置默认值。
         setStatusColor();
         setSystemInvadeBlack();
     }
 
     protected void setStatusColor() {
+        //设置状态栏的颜色
         StatusUtil.setUseStatusBarColor(this, Color.parseColor("#008577"));
     }
 
@@ -29,12 +34,9 @@ public class BaseActivity extends AppCompatActivity {
         StatusUtil.setSystemStatus(this, true, false);
     }
 
-    protected <T extends View> T getView(int resourcesId) {
-        return (T) findViewById(resourcesId);
-    }/*初始化toolbar*/
-
+    /*初始化toolbar*/
     public void initToolbar(int res) {
-        toolBar = getView(res);
+        toolBar=findViewById(res);
         toolBar.setTitle("");
         toolBar.setTitleTextColor(Color.WHITE);
     }
@@ -49,7 +51,7 @@ public class BaseActivity extends AppCompatActivity {
         this.toolBar.setMainTitleColor(color);
     }
 
-    //设置title左边文字和颜色
+    //设置title左边文字
     public void setLeftTitleText(String text) {
         this.toolBar.setLeftTitleText(text);
     }
@@ -88,4 +90,20 @@ public class BaseActivity extends AppCompatActivity {
     public void setRightTitleClickListener(View.OnClickListener onClickListener) {
         this.toolBar.setRightTitleClickListener(onClickListener);
     }
+
+    //handler内存泄漏的解决办法
+//    protected static class MyActivityHandler extends Handler {
+//        WeakReference<Activity> mWeakReference;
+//        Activity activity;
+//        public MyActivityHandler(Activity activity) {
+//            mWeakReference=new WeakReference<Activity>(activity);
+//            activity = mWeakReference.get();
+//        }
+//        @Override
+//        public void handleMessage(Message message) {
+//             if(activity==null){
+//                 activity = activityclass.this;
+//             }
+//        }
+//    }
 }
