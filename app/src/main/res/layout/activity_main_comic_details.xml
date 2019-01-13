@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/main_comic_details_toolbar"
+        layout="@layout/activity_normal_toolbar"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/main_comic_details_comicimg"
+            android:layout_width="100dp"
+            android:layout_height="144dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@color/bg_null" />
+
+        <TextView
+            android:id="@+id/main_comic_details_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/main_comic_details_comicimg"
+            app:layout_constraintTop_toTopOf="@+id/main_comic_details_comicimg" />
+
+        <Button
+            android:id="@+id/main_comic_details_look"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_toolbar"
+            android:text="立刻观看"
+            android:textColor="@color/bg_write"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/main_comic_details_comicimg"
+            app:layout_constraintStart_toStartOf="@+id/main_comic_details_title" />
+
+        <Button
+            android:id="@+id/main_comic_details_collection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@color/colorAccent"
+            android:text="点击收藏"
+            android:textColor="@color/bg_write"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/main_comic_details_comicimg"
+            app:layout_constraintStart_toEndOf="@+id/main_comic_details_look" />
+
+        <ImageView
+            android:id="@+id/Dividing_line_1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_comic_details_comicimg"
+            app:srcCompat="@color/bg_toolbar" />
+
+        <TextView
+            android:id="@+id/main_comic_details_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:text="上传时间："
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Dividing_line_1" />
+
+        <TextView
+            android:id="@+id/main_comic_details_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="作者："
+            app:layout_constraintStart_toStartOf="@+id/main_comic_details_update"
+            app:layout_constraintTop_toBottomOf="@+id/main_comic_details_update" />
+
+        <TextView
+            android:id="@+id/main_comic_details_lv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="限制等级："
+            app:layout_constraintStart_toStartOf="@+id/main_comic_details_update"
+            app:layout_constraintTop_toBottomOf="@+id/main_comic_details_author" />
+
+        <TextView
+            android:id="@+id/main_comic_details_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="页数："
+            app:layout_constraintStart_toStartOf="@+id/main_comic_details_collection"
+            app:layout_constraintTop_toTopOf="@+id/main_comic_details_lv" />
+
+        <ImageView
+            android:id="@+id/Dividing_line_2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_comic_details_lv"
+            app:srcCompat="@color/bg_toolbar" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_comic_details_comic"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Dividing_line_2">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/main_comic_details_comment"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="点我查看评论区"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

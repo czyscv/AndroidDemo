@@ -20,6 +20,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.activity.LoginActivity;
 import com.example.myapplication.activity.MainActivity;
 import com.example.myapplication.tool.BaseFragment;
+import com.example.myapplication.tool.SystemParameter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,8 +69,8 @@ public class LoginFragment extends BaseFragment {
             FormBody formBody = new FormBody.Builder()
                     .add("account", userCode)
                     .add("password",password).build();
-            Request request = new Request.Builder()
-                    .url("http://www.skythinking.cn:7777/user_info/login?account="+userCode+"&password="+password).get().build();
+            String url = SystemParameter.PATHURL + "/user_info/login?account="+userCode+"&password="+password;
+            Request request = new Request.Builder().url(url).get().build();
             Call call = okHttpClient.newCall(request);
             call.enqueue(new Callback() {
                 //请求失败执行的方法
@@ -86,10 +87,12 @@ public class LoginFragment extends BaseFragment {
                     JSONObject jsonObject = JSON.parseObject(response.body().string());
                     String info = jsonObject.getString("info");
                     if(info.equals("login_success")){
+                        String token = jsonObject.getJSONObject("data").getString("token");
                         SharedPreferences sf = getActivity().getSharedPreferences("data", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sf.edit();
-                        editor.putString("token",jsonObject.getJSONObject("data").getString("token"));
+                        editor.putString("token",token);
                         editor.apply();
+                        SystemParameter.TOKEN = token;
                     }
                     Message message = Message.obtain();
                     message.what = 0x1111;

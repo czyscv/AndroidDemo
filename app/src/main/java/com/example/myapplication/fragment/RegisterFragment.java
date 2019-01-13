@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.LoginActivity;
 import com.example.myapplication.tool.BaseFragment;
+import com.example.myapplication.tool.SystemParameter;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -81,9 +82,9 @@ public class RegisterFragment extends BaseFragment {
                 flag = true;
                 getCodeButton.setClickable(false);
                 //1.创建OkHttpClient对象
+                String url = SystemParameter.PATHURL+"/user_info/send_message_to_telephone?telephone="+mobilephone;
                 OkHttpClient okHttpClient = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url("http://www.skythinking.cn:7777/user_info/send_message_to_telephone?telephone="+mobilephone).get().build();
+                Request request = new Request.Builder().url(url).get().build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     //请求失败执行的方法
@@ -132,12 +133,13 @@ public class RegisterFragment extends BaseFragment {
             if(!password.equals(password2)){
                 Toast.makeText(getContext(),"两次输入的密码不一致",Toast.LENGTH_SHORT).show();
             }else{
+                String url = SystemParameter.PATHURL+"/user_info/register?telephone="+phone+"&password="+password+"&code="+code;
                 OkHttpClient okHttpClient = new OkHttpClient();
                 FormBody formBody = new FormBody.Builder()
                         .add("telephone", phone)
                         .add("password",password)
                         .add("code",code).build();
-                Request request = new Request.Builder().url("http://www.skythinking.cn:7777/user_info/register").post(formBody).build();
+                Request request = new Request.Builder().url(url).get().build();
                 Call call = okHttpClient.newCall(request);
                 call.enqueue(new Callback() {
                     //请求失败执行的方法

@@ -2,7 +2,6 @@ package com.example.myapplication.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,13 +17,14 @@ import android.view.ViewGroup;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.MainActivity;
 import com.example.myapplication.tool.BaseFragment;
 import com.example.myapplication.tool.ComicData;
 import com.example.myapplication.tool.ComicListAdapter;
+import com.example.myapplication.tool.EndlessRecyclerOnScrollListener;
+import com.example.myapplication.tool.SystemParameter;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -38,11 +38,13 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MainDashboardFragment extends BaseFragment {
     private View view;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;//布局
-    private ComicListAdapter comicListAdapter;//自定义监听器
+    private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新
+    private ComicListAdapter comicListAdapter;//自定义漫画监听器
     private ArrayList<ComicData> dataList = new ArrayList<>();//数据列表
     private Integer now = 1;//显示第几页
+    private static final Integer EACH = 20;//每一页显示多少
+    private static final Integer MAX_EACH = 1000;//最多显示多少&datalist最多包含多少数据
     private Handler handler;//activity的handler
 
     @Override
@@ -76,10 +78,14 @@ public class MainDashboardFragment extends BaseFragment {
         //设置Adapter
         comicListAdapter = new ComicListAdapter(dataList,view);
         recyclerView.setAdapter(comicListAdapter);
+        //下拉刷新
+        swipeRefreshLayout.setColorSchemeColors(0X008577);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                //清除数据列表 重置页数 重新获取数据 完成后取消刷新动画 然后发送完成的消息
                 dataList.clear();
+                updateUI();
                 now = 1;
                 getdata();
                 swipeRefreshLayout.setRefreshing(false);
@@ -89,6 +95,30 @@ public class MainDashboardFragment extends BaseFragment {
                 handler.sendMessage(message);
             }
         });
+        //上划加载
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                comicListAdapter.getFooterHolder().setData(1);
+                if (dataList.size() < MAX_EACH) {
+                    getdata();
+                } else {
+                    // 显示加载到底的提示
+                    comicListAdapter.getFooterHolder().setData(2);
+                }
+            }
+        });
+        //点击和长按事件在这里实现 这里交给适配器来实现
+//        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+//            @Override
+//            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+//                return false;
+//            }
+//            @Override
+//            public void onTouchEvent(RecyclerView rv, MotionEvent e) {}
+//            @Override
+//            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+//        });
     }
 
     //对外的更新UI的方法
@@ -98,9 +128,7 @@ public class MainDashboardFragment extends BaseFragment {
 
     //获得数据
     void getdata(){
-        SharedPreferences sf = getActivity().getSharedPreferences("data", MODE_PRIVATE);
-        String token = sf.getString("token",null);
-        String url = "http://www.skythinking.cn:7777/manhua/get_home_manHua?token="+token+"&now="+ (now++)+"&each=20";
+        String url = SystemParameter.PATHURL+"/manhua/get_home_manHua?token="+SystemParameter.TOKEN+"&now="+ (now++)+"&each="+EACH;
         //进行漫画列表的请求
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url(url).get().build();
@@ -123,7 +151,6 @@ public class MainDashboardFragment extends BaseFragment {
                     JSONArray data = jsonObject.getJSONArray("data");
                     for(int i=0;i<data.size();i++){
                         JSONObject job = data.getJSONObject(i);  // 遍历 jsonarray 数组，把每一个对象转成 json 对象
-                        System.out.println(job);
                         Integer id = job.getInteger("id");//ID
                         String name = job.getString("name");//名字
                         String author = job.getString("author");//作者
@@ -144,15 +171,21 @@ public class MainDashboardFragment extends BaseFragment {
                             dataList.add(comic);
                         }
                     }
-                    Message message = Message.obtain();
-                    message.what = 0x1111;
-                    message.obj = "updateUI";
-                    handler.sendMessage(message);
+                    if(data.size()==0){
+                        comicListAdapter.getFooterHolder().setData(2);
+                    }else{
+                        Message message = Message.obtain();
+                        message.what = 0x1111;
+                        message.obj = "updateUI";
+                        handler.sendMessage(message);
+                    }
                 }else{
                     Message message = Message.obtain();
                     message.what = 0x1111;
                     message.obj = "error";
                     handler.sendMessage(message);
+                    //显示网络出错
+                    comicListAdapter.getFooterHolder().setData(3);
                 }
             }
         });

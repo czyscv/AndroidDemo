@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -24,17 +25,20 @@ import java.util.List;
 
 
 public class MainActivity extends BaseActivity {
-    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;//底部按钮视图
     private ViewPager viewPager;
     private MyFragmentAdapter mAdapter;//适配器
     private List<Fragment> list = new ArrayList<>();
     private MenuItem menuItem;
-
+    private Boolean isExit = false;//两次退出的指针
     private static final int COMIC_DASHBOARD = 0x1111;
     private Handler mainHandler = new Handler(){
         @Override
         public void handleMessage(Message message) {
-            if (message.what == COMIC_DASHBOARD ) {
+            if (message.what == 0x0000){
+                //取消退出
+                isExit = false;
+            }else if (message.what == COMIC_DASHBOARD ) {
                 //加载漫画列表
                 switch (message.obj.toString()){
                     case "error":
@@ -97,9 +101,7 @@ public class MainActivity extends BaseActivity {
         });
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
             public void onPageSelected(int position) {
@@ -119,9 +121,7 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) { }
         });
         setRightTitleClickListener((view)->{
             //TODO
@@ -129,6 +129,24 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            if(!isExit){
+                isExit=true;
+                Toast.makeText(MainActivity.this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
+                Message message = Message.obtain();
+                message.what = 0x0000;
+                message.obj = "noExit";
+                mainHandler.sendMessageAtTime(message,1500);
+            }else{
+                finish();
+                System.exit(0);
+            }
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     //让下层fragment得到handler
     public Handler getActivityHandler() {

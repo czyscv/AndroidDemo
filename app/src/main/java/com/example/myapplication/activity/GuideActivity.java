@@ -47,9 +47,9 @@ public class GuideActivity extends BaseActivity {
         viewPager = findViewById(R.id.view_pager);
 
         LayoutInflater inflater = LayoutInflater.from(this);//将每个xml文件转化为View
-        View guideOne = inflater.inflate(R.layout.guidance01, null);//每个xml中就放置一个imageView
-        View guideTwo = inflater.inflate(R.layout.guidance02, null);
-        View guideThree = inflater.inflate(R.layout.guidance03, null);
+        View guideOne = inflater.inflate(R.layout.fragment_welcome_guidance01, null);//每个xml中就放置一个imageView
+        View guideTwo = inflater.inflate(R.layout.fragment_welcome_guidance02, null);
+        View guideThree = inflater.inflate(R.layout.fragment_welcome_guidance03, null);
 
         mViews.add(guideOne);//将view加入到list中
         mViews.add(guideTwo);

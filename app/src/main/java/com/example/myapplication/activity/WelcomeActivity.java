@@ -5,16 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.tool.BaseActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.tool.ComicData;
+import com.example.myapplication.tool.SystemParameter;
 
 import java.io.IOException;
 
@@ -77,12 +75,12 @@ public class WelcomeActivity extends BaseActivity {
             handler.sendEmptyMessageDelayed(GO_GUIDE, TIME);//将欢迎页停留，并且将message设置为跳转到引导页SplashActivity，跳转在goGuide中实现
         } else {
             String token = sf.getString("token",null);
-            Log.i("token",token);
             if(token==null){
                 handler.sendEmptyMessageDelayed(GO_MAIN, TIME);//将欢迎页停留，并且将message设置文跳转到 LoginActivity，跳转功能在goMain中实现
             }else{
                 //自动登录
-                String url = "http://www.skythinking.cn:7777/user_info/autoLogin?token="+token;
+                SystemParameter.TOKEN = token;
+                String url = SystemParameter.PATHURL+"/user_info/autoLogin?token="+token;
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Request request = new Request.Builder().url(url).get().build();
                 Call call = okHttpClient.newCall(request);

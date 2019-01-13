@@ -1,5 +1,6 @@
 package com.example.myapplication.tool;
 
+//漫画信息类
 public class ComicData {
     //自动递增
     private Integer id ;
