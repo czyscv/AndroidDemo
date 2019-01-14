@@ -1,7 +1,6 @@
 package com.example.myapplication.fragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,7 +20,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.activity.MainActivity;
 import com.example.myapplication.tool.BaseFragment;
 import com.example.myapplication.tool.ComicData;
-import com.example.myapplication.tool.ComicListAdapter;
+import com.example.myapplication.tool.MyComicListAdapter;
 import com.example.myapplication.tool.EndlessRecyclerOnScrollListener;
 import com.example.myapplication.tool.SystemParameter;
 
@@ -34,13 +33,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class MainDashboardFragment extends BaseFragment {
     private View view;
     private RecyclerView recyclerView;//布局
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新
-    private ComicListAdapter comicListAdapter;//自定义漫画监听器
+    private MyComicListAdapter myComicListAdapter;//自定义漫画监听器
     private ArrayList<ComicData> dataList = new ArrayList<>();//数据列表
     private Integer now = 1;//显示第几页
     private static final Integer EACH = 20;//每一页显示多少
@@ -76,8 +73,8 @@ public class MainDashboardFragment extends BaseFragment {
         //设置增加或删除条目的动画
         recyclerView.setItemAnimator( new DefaultItemAnimator());
         //设置Adapter
-        comicListAdapter = new ComicListAdapter(dataList,view);
-        recyclerView.setAdapter(comicListAdapter);
+        myComicListAdapter = new MyComicListAdapter(dataList,getContext());
+        recyclerView.setAdapter(myComicListAdapter);
         //下拉刷新
         swipeRefreshLayout.setColorSchemeColors(0X008577);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -99,12 +96,12 @@ public class MainDashboardFragment extends BaseFragment {
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore() {
-                comicListAdapter.getFooterHolder().setData(1);
+                myComicListAdapter.getFooterHolder().setData(1);
                 if (dataList.size() < MAX_EACH) {
                     getdata();
                 } else {
                     // 显示加载到底的提示
-                    comicListAdapter.getFooterHolder().setData(2);
+                    myComicListAdapter.getFooterHolder().setData(2);
                 }
             }
         });
@@ -123,7 +120,7 @@ public class MainDashboardFragment extends BaseFragment {
 
     //对外的更新UI的方法
     public void updateUI(){
-        comicListAdapter.notifyDataSetChanged();
+        myComicListAdapter.notifyDataSetChanged();
     }
 
     //获得数据
@@ -167,12 +164,12 @@ public class MainDashboardFragment extends BaseFragment {
                             comic.setPath(path);
                             comic.setTime(time);
                             comic.setLimitLevel(limitLevel);
-                            comic.setPageNum(pageNum);
+                            comic.setPageNum(1);
                             dataList.add(comic);
                         }
                     }
                     if(data.size()==0){
-                        comicListAdapter.getFooterHolder().setData(2);
+                        myComicListAdapter.getFooterHolder().setData(2);
                     }else{
                         Message message = Message.obtain();
                         message.what = 0x1111;
@@ -185,7 +182,7 @@ public class MainDashboardFragment extends BaseFragment {
                     message.obj = "error";
                     handler.sendMessage(message);
                     //显示网络出错
-                    comicListAdapter.getFooterHolder().setData(3);
+                    myComicListAdapter.getFooterHolder().setData(3);
                 }
             }
         });

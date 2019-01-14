@@ -13,7 +13,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/main_comic_details_comicimg"
@@ -21,6 +21,8 @@
             android:layout_height="144dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@color/bg_null" />
@@ -59,16 +61,17 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/main_comic_details_comicimg"
             app:layout_constraintStart_toEndOf="@+id/main_comic_details_look" />
+    </android.support.constraint.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/Dividing_line_1"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_comic_details_comicimg"
-            app:srcCompat="@color/bg_toolbar" />
+    <ImageView
+        android:id="@+id/Dividing_line_1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:srcCompat="@color/bg_toolbar" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/main_comic_details_update"
@@ -78,7 +81,18 @@
             android:layout_marginTop="15dp"
             android:text="上传时间："
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Dividing_line_1" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/main_comic_details_lv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="限制等级："
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/main_comic_details_update"
+            app:layout_constraintTop_toBottomOf="@+id/main_comic_details_author" />
 
         <TextView
             android:id="@+id/main_comic_details_author"
@@ -90,55 +104,34 @@
             app:layout_constraintTop_toBottomOf="@+id/main_comic_details_update" />
 
         <TextView
-            android:id="@+id/main_comic_details_lv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="限制等级："
-            app:layout_constraintStart_toStartOf="@+id/main_comic_details_update"
-            app:layout_constraintTop_toBottomOf="@+id/main_comic_details_author" />
-
-        <TextView
             android:id="@+id/main_comic_details_page"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="页数："
-            app:layout_constraintStart_toStartOf="@+id/main_comic_details_collection"
+            android:layout_marginEnd="40dp"
+            android:text="章节数："
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/main_comic_details_lv" />
-
-        <ImageView
-            android:id="@+id/Dividing_line_2"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_comic_details_lv"
-            app:srcCompat="@color/bg_toolbar" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/main_comic_details_comic"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Dividing_line_2">
-
-        </android.support.v7.widget.RecyclerView>
-
-        <Button
-            android:id="@+id/main_comic_details_comment"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="点我查看评论区"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/Dividing_line_2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:srcCompat="@color/bg_toolbar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_comic_details_chapterlist"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/activity_main_comic_details_list">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/main_comic_details_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="点我查看评论区" />
 
 </LinearLayout>

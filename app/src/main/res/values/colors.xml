@@ -4,8 +4,8 @@
     <color name="bg_toolbar">#008577</color>
     <color name="bg_write">#ffffff</color>
     <color name="bg_null">#00ffffff</color>
-    <color name="bg_grey">#CBCBCB</color>
-    <color name="tab_checked">#ED6A2C</color>
+    <color name="bg_grey">#cbcbcb</color>
+    <color name="tab_checked">#ed6a2c</color>
     <color name="tab_unchecked">#757575</color>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>

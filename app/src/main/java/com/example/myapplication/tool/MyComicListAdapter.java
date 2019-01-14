@@ -1,5 +1,6 @@
 package com.example.myapplication.tool;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,27 +12,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.MainComicDetailsActivity;
-import com.example.myapplication.fragment.MainDashboardFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 //漫画列表适配器
-public class ComicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class MyComicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<ComicData> mDatas;//数据
-    private View view;//视图
+    private Context context;
     private FooterHolder footerHolder;
 
-    public ComicListAdapter(List<ComicData> data,View view) {
+    public MyComicListAdapter(List<ComicData> data, Context context) {
         if (mDatas == null) {
-            Log.e("ComicListAdapterWarning","mData must not be null");
+            Log.e("Warning","ComicListAdapter mData must not be null");
             mDatas = new ArrayList<>();
         }
-        this.view = view;
+        this.context = context;
         this.mDatas = data;
     }
 
@@ -42,7 +43,7 @@ public class ComicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         View view;
         if (viewType == 0) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_main_dashboard_list, parent, false);
-            return new ViewHolder(view);
+            return new VH(view);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_main_dashboard_list_footer, parent, false);
             footerHolder = new FooterHolder(view);
@@ -53,8 +54,8 @@ public class ComicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     //onBindViewHolder方法为item的UI绑定展示数据
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof ViewHolder){
-            ViewHolder viewHolder = (ViewHolder)holder;
+        if(holder instanceof VH){
+            VH viewHolder = (VH)holder;
             ComicData comicData = mDatas.get(position);
             String name = comicData.getName();
             int l = name.length();
@@ -66,17 +67,17 @@ public class ComicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             //加载图片
             String url = SystemParameter.PATHURL+"/resource/"+comicData.getPath()+"/0001.jpg?v="+SystemParameter.VERSION;
             RequestOptions options = new RequestOptions().placeholder(R.mipmap.loading);
-            Glide.with(view).load(url).apply(options).into(viewHolder.comicimg);
+            Glide.with(context).load(url).apply(options).into(viewHolder.comicimg);
             //定义点击和长按事件
             //单击
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(view.getContext(),MainComicDetailsActivity.class);
+                    Intent intent = new Intent(context,MainComicDetailsActivity.class);
                     Bundle data = new Bundle();
-                    data.putString("comic",mDatas.get(position).getId().toString());
+                    data.putString("comic", JSON.toJSONString(mDatas.get(position)));
                     intent.putExtra("data",data);
-                    view.getContext().startActivity(intent);
+                    context.startActivity(intent);
                 }
             });
             //长按
@@ -111,11 +112,11 @@ public class ComicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     //展示漫画的ViewHolder
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    private static class VH extends RecyclerView.ViewHolder{
         public final ImageView comicimg;
         public final TextView comictitle;
         public final TextView comictime;
-        public ViewHolder(View v) {
+        public VH(View v) {
             super(v);
             comicimg = v.findViewById(R.id.dashboard_comicimg);
             comictitle = v.findViewById(R.id.dashboard_comictitle);
