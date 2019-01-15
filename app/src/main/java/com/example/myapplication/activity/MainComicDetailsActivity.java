@@ -36,8 +36,6 @@ import okhttp3.Response;
 public class MainComicDetailsActivity extends BaseActivity {
     private ComicData comicData = new ComicData();//漫画信息数据
     private List<ComicData> chapterInfoList = new ArrayList<>();//漫画数据列表
-    private Button comicLook;//观看漫画按钮
-    private Button comicCollection;//收藏漫画按钮
     private Button comicComment;//评论按钮
     private RecyclerView chapterListView;
     private MyChapterListAdapter mChapterListAdapter;
@@ -78,8 +76,6 @@ public class MainComicDetailsActivity extends BaseActivity {
                 finish();
             }
         });
-        comicLook = findViewById(R.id.main_comic_details_look);
-        comicCollection = findViewById(R.id.main_comic_details_collection);
         comicComment = findViewById(R.id.main_comic_details_comment);
         chapterListView = findViewById(R.id.main_comic_details_chapterlist);
         getdata();

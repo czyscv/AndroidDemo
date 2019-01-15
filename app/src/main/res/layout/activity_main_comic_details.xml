@@ -30,37 +30,16 @@
         <TextView
             android:id="@+id/main_comic_details_title"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/main_comic_details_comicimg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/main_comic_details_comicimg"
             app:layout_constraintTop_toTopOf="@+id/main_comic_details_comicimg" />
 
-        <Button
-            android:id="@+id/main_comic_details_look"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_toolbar"
-            android:text="立刻观看"
-            android:textColor="@color/bg_write"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/main_comic_details_comicimg"
-            app:layout_constraintStart_toStartOf="@+id/main_comic_details_title" />
-
-        <Button
-            android:id="@+id/main_comic_details_collection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:background="@color/colorAccent"
-            android:text="点击收藏"
-            android:textColor="@color/bg_write"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/main_comic_details_comicimg"
-            app:layout_constraintStart_toEndOf="@+id/main_comic_details_look" />
     </android.support.constraint.ConstraintLayout>
 
     <ImageView
@@ -118,6 +97,13 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         app:srcCompat="@color/bg_toolbar" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="  章节列表"
+        android:textAlignment="textStart"
+        android:textSize="18sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_comic_details_chapterlist"

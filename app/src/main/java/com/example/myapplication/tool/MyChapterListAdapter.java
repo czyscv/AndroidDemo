@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.MainComicLookActivity;
 
@@ -59,7 +60,7 @@ public class MyChapterListAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onClick(View v) {
                 Intent intent = new Intent(context,MainComicLookActivity.class);
                 Bundle data = new Bundle();
-                data.putString("comic", mDatas.get(position).getPath());
+                data.putString("comic", JSON.toJSONString(mDatas.get(position)));
                 intent.putExtra("data",data);
                 context.startActivity(intent);
                 }

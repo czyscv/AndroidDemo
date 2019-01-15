@@ -12,11 +12,11 @@ import android.widget.Button;
 
 import com.example.myapplication.R;
 import com.example.myapplication.tool.BaseActivity;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import crossoverone.statuslib.StatusUtil;
 
 public class GuideActivity extends BaseActivity {
     private ViewPager viewPager;//需要ViewPaeger
@@ -35,12 +35,12 @@ public class GuideActivity extends BaseActivity {
 
     @Override
     protected void setStatusColor() {
-        StatusUtil.setUseStatusBarColor(this, Color.parseColor("#00FFFFFF"));
+        StatusBarUtil.setColor(this, Color.parseColor("#00FFFFFF"));
     }
 
-    @Override
+//    @Override
     protected void setSystemInvadeBlack() {
-        StatusUtil.setSystemStatus(this, true, true);
+        StatusBarUtil.setTranslucent(this);
     }
 
     private void initView() {

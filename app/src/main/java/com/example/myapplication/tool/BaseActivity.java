@@ -1,17 +1,13 @@
 package com.example.myapplication.tool;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import java.lang.ref.WeakReference;
+import com.jaeger.library.StatusBarUtil;
 
-import crossoverone.statuslib.StatusUtil;
 
 public class BaseActivity extends AppCompatActivity {
     /*工具栏*/
@@ -21,18 +17,18 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //基类设置默认值。
         setStatusColor();
-        setSystemInvadeBlack();
+//        setSystemInvadeBlack();
     }
 
     protected void setStatusColor() {
         //设置状态栏的颜色
-        StatusUtil.setUseStatusBarColor(this, Color.parseColor("#008577"));
+        StatusBarUtil.setColor(this, Color.parseColor("#008577"));
     }
 
-    protected void setSystemInvadeBlack() {
-        // 第二个参数是是否沉浸,第三个参数是状态栏字体是否为黑色。
-        StatusUtil.setSystemStatus(this, true, false);
-    }
+//    protected void setSystemInvadeBlack() {
+//        // 第二个参数是是否沉浸,第三个参数是状态栏字体是否为黑色。
+//        StatusUtil.setSystemStatus(this, true, false);
+//    }
 
     /*初始化toolbar*/
     public void initToolbar(int res) {
