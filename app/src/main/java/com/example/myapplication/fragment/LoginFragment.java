@@ -1,9 +1,7 @@
 package com.example.myapplication.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,20 +16,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.LoginActivity;
-import com.example.myapplication.activity.MainActivity;
 import com.example.myapplication.tool.BaseFragment;
+import com.example.myapplication.tool.MyOkhttp;
 import com.example.myapplication.tool.SystemParameter;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -59,20 +51,15 @@ public class LoginFragment extends BaseFragment {
     private void initView() {
         Button login = view.findViewById(R.id.user_login);
         login.setOnClickListener((View)->{
-
-            //TODO
             TextView userCodeView = view.findViewById(R.id.login_usercode);
             TextView userPasswordView = view.findViewById(R.id.login_passworld);
             String userCode = userCodeView.getText().toString();
             String password = userPasswordView.getText().toString();
-            OkHttpClient okHttpClient = new OkHttpClient();
-            FormBody formBody = new FormBody.Builder()
-                    .add("account", userCode)
-                    .add("password",password).build();
-            String url = SystemParameter.PATHURL + "/user_info/login?account="+userCode+"&password="+password;
-            Request request = new Request.Builder().url(url).get().build();
-            Call call = okHttpClient.newCall(request);
-            call.enqueue(new Callback() {
+            MyOkhttp myOkhttp = new MyOkhttp();
+            myOkhttp.setUrl("/user_info/login");
+            myOkhttp.addParameter(new String[]{"account","password"},new String[]{userCode,password});
+            myOkhttp.myGetOkhttp();
+            myOkhttp.request(new Callback() {
                 //请求失败执行的方法
                 @Override
                 public void onFailure(Call call, IOException e) {

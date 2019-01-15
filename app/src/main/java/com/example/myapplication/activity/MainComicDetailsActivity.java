@@ -22,6 +22,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.tool.BaseActivity;
 import com.example.myapplication.tool.ComicData;
 import com.example.myapplication.tool.MyChapterListAdapter;
+import com.example.myapplication.tool.MyOkhttp;
 import com.example.myapplication.tool.SystemParameter;
 
 import java.io.IOException;
@@ -30,8 +31,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainComicDetailsActivity extends BaseActivity {
@@ -117,11 +116,11 @@ public class MainComicDetailsActivity extends BaseActivity {
         comiclv.setText("限制等级："+comicData.getLimitLevel());
         comicpage.setText("章节数："+comicData.getPageNum());
         //获得漫画列表
-        url = SystemParameter.PATHURL+"/manhua/getCartoonDetail?manId="+comicData.getId()+"&token="+SystemParameter.TOKEN;
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().url(url).get().build();
-        Call call = okHttpClient.newCall(request);
-        call.enqueue(new Callback() {
+        MyOkhttp myOkhttp = new MyOkhttp();
+        myOkhttp.setUrl("/manhua/getCartoonDetail");
+        myOkhttp.addParameter(new String[]{"manId","token"}, new String[]{comicData.getId().toString(), SystemParameter.TOKEN});
+        myOkhttp.myGetOkhttp();
+        myOkhttp.request(new Callback() {
             //请求失败执行的方法
             @Override
             public void onFailure(Call call, IOException e) {

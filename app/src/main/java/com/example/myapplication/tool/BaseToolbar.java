@@ -37,13 +37,13 @@ public class BaseToolbar extends Toolbar {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mTxtLeftTitle = (TextView) findViewById(R.id.title_left);
-        mTxtMiddleTitle = (TextView) findViewById(R.id.title_name);
-        mTxtRightTitle = (TextView)findViewById(R.id.title_right);
+        mTxtLeftTitle = findViewById(R.id.title_left);
+        mTxtMiddleTitle = findViewById(R.id.title_name);
+        mTxtRightTitle = findViewById(R.id.title_right);
     }
+
     //设置中间title的内容
     public void setMainTitle(String text) {
-        this.setTitle(" ");
         mTxtMiddleTitle.setVisibility(View.VISIBLE);
         mTxtMiddleTitle.setText(text);
     }

@@ -22,6 +22,7 @@ import com.example.myapplication.tool.BaseFragment;
 import com.example.myapplication.tool.ComicData;
 import com.example.myapplication.tool.MyComicListAdapter;
 import com.example.myapplication.tool.EndlessRecyclerOnScrollListener;
+import com.example.myapplication.tool.MyOkhttp;
 import com.example.myapplication.tool.SystemParameter;
 
 import java.io.IOException;
@@ -29,8 +30,6 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainDashboardFragment extends BaseFragment {
@@ -125,12 +124,11 @@ public class MainDashboardFragment extends BaseFragment {
 
     //获得数据
     void getdata(){
-        String url = SystemParameter.PATHURL+"/manhua/get_home_manHua?token="+SystemParameter.TOKEN+"&now="+ (now++)+"&each="+EACH;
-        //进行漫画列表的请求
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().url(url).get().build();
-        Call call = okHttpClient.newCall(request);
-        call.enqueue(new Callback() {
+        MyOkhttp myOkhttp = new MyOkhttp();
+        myOkhttp.setUrl("/manhua/get_home_manHua");
+        myOkhttp.addParameter(new String[]{"token","now","each"}, new String[]{SystemParameter.TOKEN, (now++).toString(),EACH.toString()});
+        myOkhttp.myGetOkhttp();
+        myOkhttp.request(new Callback() {
             //请求失败执行的方法
             @Override
             public void onFailure(Call call, IOException e) {
