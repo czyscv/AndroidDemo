@@ -118,9 +118,9 @@ public class MyComicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public final TextView comictime;
         public VH(View v) {
             super(v);
-            comicimg = v.findViewById(R.id.dashboard_comicimg);
-            comictitle = v.findViewById(R.id.dashboard_comictitle);
-            comictime = v.findViewById(R.id.dashboard_comictime);
+            comicimg = v.findViewById(R.id.main_dashboard_list_comicimg);
+            comictitle = v.findViewById(R.id.main_dashboard_list_comictitle);
+            comictime = v.findViewById(R.id.main_dashboard_list_comictime);
         }
     }
 }

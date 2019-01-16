@@ -43,7 +43,7 @@ public class MainPersonFragment extends BaseFragment {
         Glide.with(getContext())
                 .load(R.mipmap.user_head)
                 .apply(options)
-                .into((ImageView) view.findViewById(R.id.h_back));
+                .into((ImageView) view.findViewById(R.id.main_person_userhead_back));
         //用户头像
         options = new RequestOptions()
                 .error(R.mipmap.ic_launcher)
@@ -52,7 +52,7 @@ public class MainPersonFragment extends BaseFragment {
         Glide.with(getContext())
                 .load(R.mipmap.user_head)
                 .apply(options)
-                .into((ImageView) view.findViewById(R.id.h_head));
+                .into((ImageView) view.findViewById(R.id.main_person_userhead));
         return view;
     }
 

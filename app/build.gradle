@@ -45,4 +45,6 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
     //PhotoView 图片浏览缩放控件
     implementation 'com.bm.photoview:library:1.4.1'
+    //代替listview的recyclerview
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 }

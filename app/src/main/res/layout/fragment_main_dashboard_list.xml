@@ -9,7 +9,7 @@
     android:focusable="true">
 
     <ImageView
-        android:id="@+id/dashboard_comicimg"
+        android:id="@+id/main_dashboard_list_comicimg"
         android:layout_width="100dp"
         android:layout_height="144dp"
         android:layout_marginStart="10dp"
@@ -18,26 +18,28 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/dashboard_comictitle"
+        android:id="@+id/main_dashboard_list_comictitle"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
         android:textAlignment="viewStart"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/main_dashboard_list_comictime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dashboard_comicimg"
-        app:layout_constraintTop_toTopOf="@+id/dashboard_comicimg" />
+        app:layout_constraintStart_toEndOf="@+id/main_dashboard_list_comicimg"
+        app:layout_constraintTop_toTopOf="@+id/main_dashboard_list_comicimg" />
 
     <TextView
-        android:id="@+id/dashboard_comictime"
+        android:id="@+id/main_dashboard_list_comictime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/dashboard_comicimg"
+        app:layout_constraintBottom_toBottomOf="@+id/main_dashboard_list_comicimg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/dashboard_comictitle" />
+        app:layout_constraintStart_toStartOf="@+id/main_dashboard_list_comictitle" />
 
     <ImageView
         android:id="@+id/Dividing_line_1"
@@ -47,6 +49,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dashboard_comicimg"
+        app:layout_constraintTop_toBottomOf="@+id/main_dashboard_list_comicimg"
         app:srcCompat="@color/bg_toolbar" />
 </android.support.constraint.ConstraintLayout>

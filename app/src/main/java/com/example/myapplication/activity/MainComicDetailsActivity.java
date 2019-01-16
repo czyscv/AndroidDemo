@@ -53,6 +53,37 @@ public class MainComicDetailsActivity extends BaseActivity {
                         Toast.makeText(MainComicDetailsActivity.this, "加载失败 数据错误", Toast.LENGTH_SHORT).show();
                         finish();
                 }
+            }else if(msg.what == 0x2222){
+                //是否已收藏
+                switch (msg.obj.toString()){
+                    case "yes":
+                        isConnect();
+                        break;
+                    case "no":
+                        noConnect();
+                        break;
+                    default:
+                        noConnect();
+                }
+            }else if(msg.what == 0x3333){
+                //收藏和取消收藏
+                switch (msg.obj.toString()){
+                    case "delete":
+                        Toast.makeText(MainComicDetailsActivity.this, "漫画取消成功", Toast.LENGTH_SHORT).show();
+                        noConnect();
+                        break;
+                    case "success":
+                        Toast.makeText(MainComicDetailsActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                        isConnect();
+                        break;
+                    case "repate":
+                        Toast.makeText(MainComicDetailsActivity.this, "你已经收藏了该漫画", Toast.LENGTH_SHORT).show();
+                        isConnect();
+                        break;
+                    default:
+                        Toast.makeText(MainComicDetailsActivity.this, "加载失败 数据错误", Toast.LENGTH_SHORT).show();
+                        noConnect();
+                }
             }
         }
     };
@@ -89,6 +120,30 @@ public class MainComicDetailsActivity extends BaseActivity {
         //设置Adapter
         mChapterListAdapter = new MyChapterListAdapter(chapterInfoList,MainComicDetailsActivity.this);
         chapterListView.setAdapter(mChapterListAdapter);
+        //查询这部漫画是否被收藏
+        MyOkhttp myOkhttp = new MyOkhttp();
+        myOkhttp.setUrl("/collection_info/isConnect");
+        myOkhttp.addParameter(new String[]{"token","manId"}, new String[]{SystemParameter.TOKEN, comicData.getId().toString()});
+        myOkhttp.myGetOkhttp();
+        myOkhttp.request(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = Message.obtain();
+                message.what = 0x2222;
+                message.obj = "no";
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                JSONObject jsonObject = JSON.parseObject(response.body().string());
+                String info = jsonObject.getString("info");
+                Message message = Message.obtain();
+                message.what = 0x2222;
+                message.obj = info;
+                handler.sendMessage(message);
+            }
+        });
     }
 
     private void getdata(){
@@ -177,6 +232,67 @@ public class MainComicDetailsActivity extends BaseActivity {
                     message.obj = "error";
                     handler.sendMessage(message);
                 }
+            }
+        });
+    }
+
+    private void isConnect(){
+        setRightTitleText("取消收藏");
+        setRightTitleClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyOkhttp myOkhttp = new MyOkhttp();
+                myOkhttp.setUrl("/collection_info/cancelCollect");
+                myOkhttp.addParameter(new String[]{"token","manId"}, new String[]{SystemParameter.TOKEN, comicData.getId().toString()});
+                myOkhttp.myGetOkhttp();
+                myOkhttp.request(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Message message = Message.obtain();
+                        message.what = 0x1111;
+                        message.obj = "error";
+                        handler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        Message message = Message.obtain();
+                        message.what = 0x3333;
+                        message.obj = "delete";
+                        handler.sendMessage(message);
+                    }
+                });
+            }
+        });
+    }
+    private void noConnect(){
+        setRightTitleText("点击收藏");
+        setRightTitleClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyOkhttp myOkhttp = new MyOkhttp();
+                myOkhttp.setUrl("/collection_info/collect");
+                myOkhttp.addParameter(new String[]{"token","manId","action"}, new String[]{SystemParameter.TOKEN, comicData.getId().toString(),"1"});
+                myOkhttp.myGetOkhttp();
+                myOkhttp.request(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Message message = Message.obtain();
+                        message.what = 0x1111;
+                        message.obj = "error";
+                        handler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        JSONObject jsonObject = JSON.parseObject(response.body().string());
+                        String info = jsonObject.getString("info");
+                        Message message = Message.obtain();
+                        message.what = 0x3333;
+                        message.obj = info;
+                        handler.sendMessage(message);
+                    }
+                });
             }
         });
     }

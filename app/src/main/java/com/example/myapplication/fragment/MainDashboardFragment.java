@@ -55,8 +55,8 @@ public class MainDashboardFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_main_dashboard,null);
-        recyclerView = view.findViewById(R.id.comic_dashboard);
-        swipeRefreshLayout = view.findViewById(R.id.update_dashboard);
+        recyclerView = view.findViewById(R.id.mian_dashboard_comiclist);
+        swipeRefreshLayout = view.findViewById(R.id.main_dashboard_update);
         initView();
         return view;
     }
