@@ -19,6 +19,7 @@ import com.example.myapplication.activity.LoginActivity;
 import com.example.myapplication.tool.BaseFragment;
 import com.example.myapplication.tool.MyOkhttp;
 import com.example.myapplication.tool.SystemParameter;
+import com.example.myapplication.tool.UserData;
 
 import java.io.IOException;
 
@@ -80,6 +81,7 @@ public class LoginFragment extends BaseFragment {
                         editor.putString("token",token);
                         editor.apply();
                         SystemParameter.TOKEN = token;
+                        SystemParameter.USERINFO = JSON.parseObject(jsonObject.getJSONObject("data").toJSONString(), UserData.class);
                     }
                     Message message = Message.obtain();
                     message.what = 0x1111;

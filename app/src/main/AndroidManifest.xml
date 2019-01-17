@@ -21,6 +21,7 @@ package="com.example.myapplication">
     <activity android:name=".activity.LoginActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     <activity android:name=".activity.MainComicDetailsActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     <activity android:name=".activity.MainComicLookActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+    <activity android:name=".activity.MainComicCollectionActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
 </application>
 <uses-permission android:name="android.permission.INTERNET"/><!--网络权限-->
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

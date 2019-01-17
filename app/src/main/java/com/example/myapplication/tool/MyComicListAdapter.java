@@ -66,7 +66,7 @@ public class MyComicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             viewHolder.comictime.setText("上传时间："+comicData.getTime());
             //加载图片
             String url = SystemParameter.PATHURL+"/resource/"+comicData.getPath()+"/0001.jpg?v="+SystemParameter.VERSION;
-            RequestOptions options = new RequestOptions().placeholder(R.mipmap.loading);
+            RequestOptions options = new RequestOptions().placeholder(R.mipmap.loading_list);
             Glide.with(context).load(url).apply(options).into(viewHolder.comicimg);
             //定义点击和长按事件
             //单击

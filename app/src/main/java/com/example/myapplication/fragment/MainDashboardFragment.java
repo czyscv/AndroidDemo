@@ -140,8 +140,18 @@ public class MainDashboardFragment extends BaseFragment {
         totop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //平滑回到顶部
-                recyclerView.smoothScrollToPosition(0);
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                    //获取第一个可见view的位置
+                    int position  = linearManager.findFirstVisibleItemPosition();
+                    if(position>100){
+                        //立刻回到顶部
+                        recyclerView.scrollToPosition(0);
+                    }else{
+                        //平滑回到顶部
+                        recyclerView.smoothScrollToPosition(0);
+                    }
+                }
             }
         });
     }
@@ -210,8 +220,7 @@ public class MainDashboardFragment extends BaseFragment {
                     message.what = 0x1111;
                     message.obj = "error";
                     handler.sendMessage(message);
-                    //显示网络出错
-                    myComicListAdapter.getFooterHolder().setData(3);
+
                 }
             }
         });

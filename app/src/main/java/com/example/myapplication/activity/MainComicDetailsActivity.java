@@ -99,6 +99,7 @@ public class MainComicDetailsActivity extends BaseActivity {
     private void initView(){
         //设置toolbar
         setMainTitle("漫画详情");
+        setRightTitleText("请稍等...");
         setLeftTitleText("返回");
         setLeftTitleDrawable(R.mipmap.ic_back);
         setLeftTitleClickListener(new View.OnClickListener() {
@@ -160,7 +161,7 @@ public class MainComicDetailsActivity extends BaseActivity {
         //设置属性
         comicname.setText(comicData.getName());
         String url = SystemParameter.PATHURL+"/resource/"+comicData.getPath()+"/0001.jpg?v="+SystemParameter.VERSION;
-        RequestOptions options = new RequestOptions().placeholder(R.mipmap.loading);
+        RequestOptions options = new RequestOptions().placeholder(R.mipmap.loading_list);
         Glide.with(MainComicDetailsActivity.this).load(url).apply(options).into(comicimg);
         comictime.setText("上传时间："+comicData.getTime());
         comicauthor.setText("作者："+comicData.getAuthor());

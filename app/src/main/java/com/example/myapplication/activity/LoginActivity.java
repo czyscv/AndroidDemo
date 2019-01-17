@@ -68,7 +68,7 @@ public class LoginActivity extends BaseActivity {
             }else if(message.what == 0x3333){
                 //注册
                 switch (message.obj.toString()){
-                    case "send success":
+                    case "register_success":
                         Toast.makeText(LoginActivity.this, "注册成功 ", Toast.LENGTH_SHORT).show();
                         break;
                     case "telephone_repeat":
@@ -85,15 +85,17 @@ public class LoginActivity extends BaseActivity {
                 }
             }else if (message.what == 0x1234) {
                 Button button = findViewById(R.id.get_code_button);
-                Integer time = Integer.valueOf(message.obj.toString());
-                if (time == 0) {
-                    button.setText("获取验证码");
-                    button.setClickable(true);
-                } else{
-                    if (time>=10){
-                        button.setText(time + "秒后重发");
-                    }else{
-                        button.setText("0"+time + "秒后重发");
+                if (button != null){
+                    Integer time = Integer.valueOf(message.obj.toString());
+                    if (time == 0) {
+                        button.setText("获取验证码");
+                        button.setClickable(true);
+                    } else{
+                        if (time>=10){
+                            button.setText(time + "秒后重发");
+                        }else{
+                            button.setText("0"+time + "秒后重发");
+                        }
                     }
                 }
             }

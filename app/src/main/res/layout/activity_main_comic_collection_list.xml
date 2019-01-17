@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_selector"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/main_comic_collection_list_comicimg"
+        android:layout_width="100dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/main_comic_collection_list_comictitle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:textAlignment="viewStart"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/main_comic_collection_list_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/main_comic_collection_list_comicimg"
+        app:layout_constraintTop_toTopOf="@+id/main_comic_collection_list_comicimg" />
+
+    <TextView
+        android:id="@+id/main_comic_collection_list_time"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/main_comic_collection_list_comicimg"
+        app:layout_constraintEnd_toStartOf="@+id/main_comic_collection_list_button"
+        app:layout_constraintStart_toStartOf="@+id/main_comic_collection_list_comictitle"
+        app:layout_constraintTop_toTopOf="@+id/main_comic_collection_list_button" />
+
+    <Button
+        android:id="@+id/main_comic_collection_list_button"
+        style="@android:style/Widget.Material.Light.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:elevation="0dp"
+        android:text="取消收藏"
+        app:layout_constraintBottom_toBottomOf="@+id/main_comic_collection_list_comicimg"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/Dividing_line_1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_comic_collection_list_comicimg"
+        app:srcCompat="@color/bg_toolbar" />
+
+</android.support.constraint.ConstraintLayout>

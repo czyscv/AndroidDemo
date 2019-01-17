@@ -39,8 +39,9 @@ import jp.wasabeef.glide.transformations.internal.RSBlur;
 
 public class MainPersonFragment extends BaseFragment {
     private UserData userData;
-    private Integer[] iconlist;
-    private List<String> titlelist = new ArrayList<>(Arrays.asList(new String[]{"我的收藏","购买会员","帮助信息"}));
+    private Integer[] iconlist = new Integer[]{R.mipmap.ic_user,R.mipmap.ic_favor,R.mipmap.ic_vip,R.mipmap.ic_question};;
+    private String[] titlelist;
+    private String[] valuelist;
     private View view;
     private RecyclerView recyclerView;
     private MyPersonListAdapter myPersonListAdapter;
@@ -50,23 +51,23 @@ public class MainPersonFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_main_person,null);
         userData = SystemParameter.USERINFO;
-        titlelist.add(0, userData.getUsername());
-        iconlist = new Integer[]{R.mipmap.ic_warn,R.mipmap.ic_favor,R.mipmap.ic_vip,R.mipmap.ic_question};
+        titlelist = new String[]{userData.getUsername(),"我的收藏","购买会员","帮助信息"};
+        valuelist =new String[]{userData.getTelephone()};
         initView();
         return view;
     }
 
     private void initView(){
-        String headurl = SystemParameter.PATHURL+"/resource/userHead/"+userData.getHeadUrl();
+        String headurl = SystemParameter.PATHURL+"/resource/userHead/"+userData.getHeadUrl()+"?v="+SystemParameter.VERSION;
         //用户背景
-        RequestOptions options = new RequestOptions().error(R.mipmap.user_head).priority(Priority.HIGH)
+        RequestOptions options = new RequestOptions().priority(Priority.HIGH)
                 .transform(new GlideBlurTransformer(getContext(),25,4));
         Glide.with(getContext())
                 .load(headurl)
                 .apply(options)
                 .into((ImageView) view.findViewById(R.id.main_person_userhead_back));
         //用户头像
-        options = new RequestOptions().error(R.mipmap.user_head).priority(Priority.HIGH).circleCrop();
+        options = new RequestOptions().priority(Priority.HIGH).circleCrop();
         Glide.with(getContext())
                 .load(headurl)
                 .apply(options)
@@ -80,7 +81,7 @@ public class MainPersonFragment extends BaseFragment {
         //设置增加或删除条目的动画
         recyclerView.setItemAnimator( new DefaultItemAnimator());
         //设置Adapter
-        myPersonListAdapter = new MyPersonListAdapter(getContext(),iconlist,titlelist,new String[]{userData.getTelephone()});
+        myPersonListAdapter = new MyPersonListAdapter(getContext(),iconlist,titlelist,valuelist);
         recyclerView.setAdapter(myPersonListAdapter);
     }
 

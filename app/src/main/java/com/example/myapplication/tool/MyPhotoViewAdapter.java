@@ -4,10 +4,8 @@ package com.example.myapplication.tool;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bm.library.PhotoView;
 import com.bumptech.glide.Glide;
@@ -36,7 +34,7 @@ public class MyPhotoViewAdapter extends PagerAdapter {
         photoView.setMaxScale(2);
         Glide.with(context)
                 .load(url)
-                .apply(new RequestOptions().placeholder(R.mipmap.loading))
+                .apply(new RequestOptions().placeholder(R.mipmap.ic_loading).error(R.mipmap.ic_loading_error))
                 .into(photoView);
         container.addView(photoView);
         return photoView;

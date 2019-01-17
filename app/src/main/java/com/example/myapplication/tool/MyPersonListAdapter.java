@@ -16,20 +16,20 @@ import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
+import com.example.myapplication.activity.MainComicCollectionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyPersonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Integer[] icon;
-    private List<String> mData;//数据
+    private String[] mData;//数据
     private String[] values;
     private Context context;
 
-    public MyPersonListAdapter(Context context, Integer[] icon, List<String> data, String... values) {
+    public MyPersonListAdapter(Context context, Integer[] icon, String[] data, String... values) {
         if (mData == null) {
             Log.e("Warning","MyPersonListAdapter mData must not be null");
-            mData = new ArrayList<>();
         }
         this.context = context;
         this.icon = icon;
@@ -50,7 +50,7 @@ public class MyPersonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             MyPersonListAdapter.VH viewHolder = (MyPersonListAdapter.VH) holder;
             RequestOptions options = new RequestOptions().error(R.mipmap.ic_warn);
             Glide.with(context).load(icon[position]).apply(options).into(viewHolder.icon);
-            viewHolder.title.setText(mData.get(position));
+            viewHolder.title.setText(mData[position]);
             if (position<values.length && values[position] != null && !values[position].equals("")){
                 viewHolder.value.setText(values[position]);
             }
@@ -58,11 +58,22 @@ public class MyPersonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent intent = new Intent(context, MainComicLookActivity.class);
-//                    Bundle data = new Bundle();
-//                    data.putString("comic", JSON.toJSONString(mDatas.get(position)));
-//                    intent.putExtra("data",data);
-//                    context.startActivity(intent);
+                    switch (icon[position]){
+                        case R.mipmap.ic_user:
+                            //TODO
+                            break;
+                        case R.mipmap.ic_favor:
+                            Intent intent = new Intent(context, MainComicCollectionActivity.class);
+                            context.startActivity(intent);
+                            break;
+                        case R.mipmap.ic_vip:
+                            //TODO
+                            break;
+                        case R.mipmap.ic_question:
+                            //TODO
+                            break;
+                    }
+
                 }
             });
             //长按
@@ -77,7 +88,7 @@ public class MyPersonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData.length;
     }
 
     //展示章节的ViewHolder

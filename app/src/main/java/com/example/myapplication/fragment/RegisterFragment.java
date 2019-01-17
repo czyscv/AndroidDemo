@@ -30,7 +30,6 @@ import okhttp3.Response;
 
 public class RegisterFragment extends BaseFragment {
     private int time = 60;
-    private boolean flag = false;
     private View view;
     private Handler handler;
 
@@ -47,23 +46,6 @@ public class RegisterFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_login_register, null);
         initView();
-        //新建一个守护计时器 每秒钟传一次消息
-        new Timer(true).schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (flag){
-                    Message message = Message.obtain();
-                    message.what = 0x1234;
-                    message.obj = time;
-                    handler.sendMessage(message);
-                    if(time<=0){
-                        time = 60;
-                        flag = false;
-                    }
-                    time--;
-                }
-            }
-        }, 0,1000);
         return view;
     }
 
@@ -75,7 +57,21 @@ public class RegisterFragment extends BaseFragment {
             if (mobilephone.length() != 11) {
                 Toast.makeText(getContext(), "请输入正确的11位手机号", Toast.LENGTH_SHORT).show();
             } else {
-                flag = true;
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Message message = Message.obtain();
+                        message.what = 0x1234;
+                        message.obj = time;
+                        handler.sendMessage(message);
+                        if(time>0){
+                            time--;
+                        }else{
+                            time = 60;
+                            this.cancel();
+                        }
+                    }
+                }, 0,1000);
                 getCodeButton.setClickable(false);
                 //1.创建OkHttpClient对象
                 MyOkhttp myOkhttp = new MyOkhttp();
@@ -148,11 +144,12 @@ public class RegisterFragment extends BaseFragment {
                         JSONObject jsonObject = JSON.parseObject(response.body().string());
                         String info = jsonObject.getString("info");
                         if ("send success".equals(info)){
-                            Message message = Message.obtain();
-                            message.what = 0x3333;
-                            message.obj = info;
-                            handler.sendMessage(message);
+
                         }
+                        Message message = Message.obtain();
+                        message.what = 0x3333;
+                        message.obj = info;
+                        handler.sendMessage(message);
                     }
                 });
             }

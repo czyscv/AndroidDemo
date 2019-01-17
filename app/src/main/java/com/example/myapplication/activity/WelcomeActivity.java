@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.tool.BaseActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.tool.SystemParameter;
+import com.example.myapplication.tool.UserData;
 
 import java.io.IOException;
 
@@ -96,9 +97,10 @@ public class WelcomeActivity extends BaseActivity {
                         JSONObject jsonObject = JSON.parseObject(response.body().string());
                         String info = jsonObject.getString("info");
                         if(info.equals("success")){
-                            handler.sendEmptyMessage(GO_MAIN);
+                            handler.sendEmptyMessageDelayed(GO_MAIN, TIME);
+                            SystemParameter.USERINFO = JSON.parseObject(jsonObject.getJSONObject("data").toJSONString(), UserData.class);
                         }else{
-                            handler.sendEmptyMessage(GO_LOGIN);
+                            handler.sendEmptyMessageDelayed(GO_LOGIN, TIME);
                         }
                     }
                 });

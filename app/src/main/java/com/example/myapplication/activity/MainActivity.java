@@ -74,6 +74,10 @@ public class MainActivity extends BaseActivity {
                     case "updateOK":
                         Toast.makeText(MainActivity.this, "刷新完成", Toast.LENGTH_SHORT).show();
                         break;
+                    case "not_login":
+                        Toast.makeText(MainActivity.this, "您还没有登录",Toast.LENGTH_SHORT).show();
+                        goLogin();
+                        break;
                     default:
                         Toast.makeText(MainActivity.this, "网络错误",Toast.LENGTH_SHORT).show();
                 }
@@ -87,7 +91,6 @@ public class MainActivity extends BaseActivity {
         initToolbar(R.id.main_toolbar);
         setMainTitle("首页");
         initView();
-        initUser();
     }
 
     private void initView() {
@@ -152,35 +155,35 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(MainActivity.this,"这里是设置",Toast.LENGTH_SHORT).show();
         });
     }
-    private void initUser(){
-        MyOkhttp myOkhttp = new MyOkhttp();
-        myOkhttp.setUrl("/user_info/get_user_info");
-        myOkhttp.addParameter(new String[]{"token"}, new String[]{SystemParameter.TOKEN});
-        myOkhttp.myGetOkhttp();
-        myOkhttp.request(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Message message = Message.obtain();
-                message.what = 0x0000;
-                message.obj = "error";
-                mainHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                JSONObject jsonObject = JSON.parseObject(response.body().string());
-                String info = jsonObject.getString("info");
-                if(info.equals("success")){
-                    JSONObject data = jsonObject.getJSONObject("data");
-                    SystemParameter.USERINFO = JSON.parseObject(data.toJSONString() , UserData.class);
-                }
-                Message message = Message.obtain();
-                message.what = 0x0000;
-                message.obj = info;
-                mainHandler.sendMessage(message);
-            }
-        });
-    }
+//    private void initUser(){
+//        MyOkhttp myOkhttp = new MyOkhttp();
+//        myOkhttp.setUrl("/user_info/get_user_info");
+//        myOkhttp.addParameter(new String[]{"token"}, new String[]{SystemParameter.TOKEN});
+//        myOkhttp.myGetOkhttp();
+//        myOkhttp.request(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Message message = Message.obtain();
+//                message.what = 0x0000;
+//                message.obj = "error";
+//                mainHandler.sendMessage(message);
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                JSONObject jsonObject = JSON.parseObject(response.body().string());
+//                String info = jsonObject.getString("info");
+//                if(info.equals("success")){
+//                    JSONObject data = jsonObject.getJSONObject("data");
+//                    SystemParameter.USERINFO = JSON.parseObject(data.toJSONString() , UserData.class);
+//                }
+//                Message message = Message.obtain();
+//                message.what = 0x0000;
+//                message.obj = info;
+//                mainHandler.sendMessage(message);
+//            }
+//        });
+//    }
 
     private void goLogin() {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
