@@ -19,6 +19,10 @@ public class UserData {
     private String headUrl;
     //活跃度
     private Integer activity;
+    //用户等级
+    private Integer level;
+    //用户积分
+    private Integer score;
 
     public Integer getId() {
         return id;
@@ -90,5 +94,21 @@ public class UserData {
 
     public void setActivity(Integer activity) {
         this.activity = activity;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }

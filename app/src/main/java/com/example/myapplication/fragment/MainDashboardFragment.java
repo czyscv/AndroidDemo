@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -37,6 +38,7 @@ public class MainDashboardFragment extends BaseFragment {
     private RecyclerView recyclerView;//布局
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新
     private MyComicListAdapter myComicListAdapter;//自定义漫画监听器
+    private ImageButton totop;//回到顶部按钮
     private ArrayList<ComicData> dataList = new ArrayList<>();//数据列表
     private Integer now = 1;//显示第几页
     private static final Integer EACH = 20;//每一页显示多少
@@ -103,6 +105,23 @@ public class MainDashboardFragment extends BaseFragment {
                     myComicListAdapter.getFooterHolder().setData(2);
                 }
             }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                //判断是当前layoutManager是否为LinearLayoutManager
+                // 只有LinearLayoutManager才有查找第一个和最后一个可见view位置的方法
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                    //获取第一个可见view的位置
+                    int position  = linearManager.findFirstVisibleItemPosition();
+                    if(position>5){
+                        totop.setVisibility(View.VISIBLE);
+                    }else{
+                        totop.setVisibility(View.GONE);
+                    }
+                }
+            }
         });
         //点击和长按事件在这里实现 这里交给适配器来实现
 //        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -115,6 +134,16 @@ public class MainDashboardFragment extends BaseFragment {
 //            @Override
 //            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
 //        });
+        //回到顶部
+        totop = view.findViewById(R.id.main_dashboard_top);
+        totop.setVisibility(View.GONE);
+        totop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //平滑回到顶部
+                recyclerView.smoothScrollToPosition(0);
+            }
+        });
     }
 
     //对外的更新UI的方法
@@ -146,25 +175,27 @@ public class MainDashboardFragment extends BaseFragment {
                     JSONArray data = jsonObject.getJSONArray("data");
                     for(int i=0;i<data.size();i++){
                         JSONObject job = data.getJSONObject(i);  // 遍历 jsonarray 数组，把每一个对象转成 json 对象
-                        Integer id = job.getInteger("id");//ID
-                        String name = job.getString("name");//名字
-                        String author = job.getString("author");//作者
-                        String path = job.getString("path");//相对路径
-                        String time = job.getString("time");//上传时间
-                        Integer limitLevel = job.getInteger("limitLevel");//限制等级
-                        Integer toShow = job.getInteger("toShow");//是否显示 0隐藏
-                        Integer pageNum = job.getInteger("pageNum");//页数
-                        if(toShow==1){
-                            ComicData comic = new ComicData();
-                            comic.setId(id);
-                            comic.setName(name);
-                            comic.setAuthor(author);
-                            comic.setPath(path);
-                            comic.setTime(time);
-                            comic.setLimitLevel(limitLevel);
-                            comic.setPageNum(1);
-                            dataList.add(comic);
-                        }
+                        ComicData comicData = JSON.parseObject(job.toJSONString(),ComicData.class);
+                        dataList.add(comicData);
+//                        Integer id = job.getInteger("id");//ID
+//                        String name = job.getString("name");//名字
+//                        String author = job.getString("author");//作者
+//                        String path = job.getString("path");//相对路径
+//                        String time = job.getString("time");//上传时间
+//                        Integer limitLevel = job.getInteger("limitLevel");//限制等级
+//                        Integer toShow = job.getInteger("toShow");//是否显示 0隐藏
+//                        Integer pageNum = job.getInteger("pageNum");//页数
+//                        if(toShow==1){
+//                            ComicData comic = new ComicData();
+//                            comic.setId(id);
+//                            comic.setName(name);
+//                            comic.setAuthor(author);
+//                            comic.setPath(path);
+//                            comic.setTime(time);
+//                            comic.setLimitLevel(limitLevel);
+//                            comic.setPageNum(1);
+//                            dataList.add(comic);
+//                        }
                     }
                     if(data.size()==0){
                         myComicListAdapter.getFooterHolder().setData(2);

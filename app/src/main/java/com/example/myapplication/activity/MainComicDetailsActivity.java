@@ -241,6 +241,7 @@ public class MainComicDetailsActivity extends BaseActivity {
         setRightTitleClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setRightTitleText("请稍等...");
                 MyOkhttp myOkhttp = new MyOkhttp();
                 myOkhttp.setUrl("/collection_info/cancelCollect");
                 myOkhttp.addParameter(new String[]{"token","manId"}, new String[]{SystemParameter.TOKEN, comicData.getId().toString()});
@@ -270,6 +271,7 @@ public class MainComicDetailsActivity extends BaseActivity {
         setRightTitleClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setRightTitleText("请稍等...");
                 MyOkhttp myOkhttp = new MyOkhttp();
                 myOkhttp.setUrl("/collection_info/collect");
                 myOkhttp.addParameter(new String[]{"token","manId","action"}, new String[]{SystemParameter.TOKEN, comicData.getId().toString(),"1"});

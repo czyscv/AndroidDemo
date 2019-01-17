@@ -1,5 +1,6 @@
 package com.example.myapplication.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +12,8 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.fragment.MainDashboardFragment;
 import com.example.myapplication.fragment.MainHomeFragment;
 import com.example.myapplication.fragment.MainPersonFragment;
@@ -19,9 +22,17 @@ import com.example.myapplication.tool.BaseActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.tool.BottomNavigationViewHelper;
 import com.example.myapplication.tool.MyFragmentAdapter;
+import com.example.myapplication.tool.MyOkhttp;
+import com.example.myapplication.tool.SystemParameter;
+import com.example.myapplication.tool.UserData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 public class MainActivity extends BaseActivity {
@@ -36,8 +47,20 @@ public class MainActivity extends BaseActivity {
         @Override
         public void handleMessage(Message message) {
             if (message.what == 0x0000){
-                //取消退出
-                isExit = false;
+                switch (message.obj.toString()){
+                    case "noExit":
+                        //取消退出
+                        isExit = false;
+                        break;
+                    case "error":
+                        Toast.makeText(MainActivity.this, "数据错误",Toast.LENGTH_SHORT).show();
+                        goLogin();
+                        break;
+                    case "not_login":
+                        Toast.makeText(MainActivity.this, "您还没有登录",Toast.LENGTH_SHORT).show();
+                        goLogin();
+                        break;
+                }
             }else if (message.what == COMIC_DASHBOARD ) {
                 //加载漫画列表
                 switch (message.obj.toString()){
@@ -64,6 +87,7 @@ public class MainActivity extends BaseActivity {
         initToolbar(R.id.main_toolbar);
         setMainTitle("首页");
         initView();
+        initUser();
     }
 
     private void initView() {
@@ -127,6 +151,41 @@ public class MainActivity extends BaseActivity {
             //TODO
             Toast.makeText(MainActivity.this,"这里是设置",Toast.LENGTH_SHORT).show();
         });
+    }
+    private void initUser(){
+        MyOkhttp myOkhttp = new MyOkhttp();
+        myOkhttp.setUrl("/user_info/get_user_info");
+        myOkhttp.addParameter(new String[]{"token"}, new String[]{SystemParameter.TOKEN});
+        myOkhttp.myGetOkhttp();
+        myOkhttp.request(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = Message.obtain();
+                message.what = 0x0000;
+                message.obj = "error";
+                mainHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                JSONObject jsonObject = JSON.parseObject(response.body().string());
+                String info = jsonObject.getString("info");
+                if(info.equals("success")){
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    SystemParameter.USERINFO = JSON.parseObject(data.toJSONString() , UserData.class);
+                }
+                Message message = Message.obtain();
+                message.what = 0x0000;
+                message.obj = info;
+                mainHandler.sendMessage(message);
+            }
+        });
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.bm.library.PhotoView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.myapplication.R;
 
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class MyPhotoViewAdapter extends PagerAdapter {
         photoView.setMaxScale(2);
         Glide.with(context)
                 .load(url)
+                .apply(new RequestOptions().placeholder(R.mipmap.loading))
                 .into(photoView);
         container.addView(photoView);
         return photoView;
