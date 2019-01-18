@@ -9,7 +9,7 @@
     android:focusable="true">
 
     <TextView
-        android:id="@+id/details_list_name"
+        android:id="@+id/main_comic_details_list_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -20,20 +20,19 @@
         android:textAlignment="viewStart"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/textView8"
+        app:layout_constraintEnd_toStartOf="@+id/main_comic_details_list_page"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/main_comic_details_list_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:text="点击观看"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/details_list_name"
+        android:layout_marginEnd="20dp"
+        android:text="页数："
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/details_list_name" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"

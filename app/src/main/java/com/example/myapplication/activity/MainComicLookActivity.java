@@ -3,17 +3,14 @@ package com.example.myapplication.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
 
 import com.alibaba.fastjson.JSON;
-import com.bm.library.PhotoView;
 import com.example.myapplication.R;
 import com.example.myapplication.tool.BaseActivity;
 import com.example.myapplication.tool.ComicData;
-import com.example.myapplication.tool.MyPhotoViewAdapter;
+import com.example.myapplication.adapter.MyPhotoViewAdapter;
 import com.example.myapplication.tool.SystemParameter;
 
 import java.util.ArrayList;
@@ -36,19 +33,16 @@ public class MainComicLookActivity extends BaseActivity {
         initToolbar(R.id.main_comic_look_toolbar);
         viewPager = findViewById(R.id.main_comic_look_viewpage);
         seekBar = findViewById(R.id.main_comic_look_seekBar);
+        InitData();
         initView();
     }
 
     private void initView(){
-        getData();
         setMainTitle("1/"+comicData.getPageNum());
         setLeftTitleText("返回");
         setLeftTitleDrawable(R.mipmap.ic_back);
-        setLeftTitleClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
+        setLeftTitleClickListener((view)->{
+            finish();
         });
         //view视图
         mPhotoViewAdapter = new MyPhotoViewAdapter(comicImgUrl,MainComicLookActivity.this);
@@ -93,7 +87,7 @@ public class MainComicLookActivity extends BaseActivity {
         });
     }
 
-    private void getData(){
+    private void InitData(){
         String c = getIntent().getBundleExtra("data").getString("comic");
         comicData = JSON.parseObject(c,ComicData.class);
         String path = comicData.getPath();
@@ -107,7 +101,7 @@ public class MainComicLookActivity extends BaseActivity {
             }else if(i<1000){
                 url = url + "0" ;
             }
-            url = url + i + ".jpg?v="+SystemParameter.VERSION;
+            url = url + i + ".jpg?v="+SystemParameter.VERSION+"&token="+SystemParameter.TOKEN;
             comicImgUrl.add(url);
         }
     }

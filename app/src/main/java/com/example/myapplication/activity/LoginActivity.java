@@ -15,7 +15,8 @@ import com.example.myapplication.fragment.LoginFragment;
 import com.example.myapplication.R;
 import com.example.myapplication.fragment.RegisterFragment;
 import com.example.myapplication.tool.BaseActivity;
-import com.example.myapplication.tool.MyFragmentAdapter;
+import com.example.myapplication.adapter.MyFragmentAdapter;
+import com.example.myapplication.tool.SystemParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,67 +27,44 @@ public class LoginActivity extends BaseActivity {
     private TabLayout tabLayout;//头部选项卡
     private List<Fragment> fragmentlist = new ArrayList<>();
     private List<String > titlelist = new ArrayList<>();
+
+    public static final Integer LOGIN_SUCCESS = 0x9999;
+    public static final Integer LOGIN_ACCOUNT_NOT_EXIST = 0X9998;
+    public static final Integer SEND_SUCCESS = 0X9997;
+    public static final Integer TEL_IS_ALREADY_TO_USED = 0X9996;
+    public static final Integer TEL_NUMBER_ERROR = 0X9995;
+    public static final Integer REGISTER_SUCCESS = 0X9994;
+    public static final Integer CODE_ERROR = 0X9993;
+    public static final Integer CODE_OVERDUE = 0X9992;
+    public static final Integer UPDATEUI = 0X9991;
     private Handler handler = new Handler(){
         @Override
-        public void handleMessage(Message message) {
-            if (message.what == 0x1111 ) {
-                //登录用的
-               switch (message.obj.toString()){
-                   case "error":
-                       Toast.makeText(LoginActivity.this, "登陆失败 请检查网络后重试", Toast.LENGTH_SHORT).show();
-                       break;
-                   case "account_not_exist":
-                       Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
-                       break;
-                   case "login_success":
-                       Toast.makeText(LoginActivity.this, "欢迎回来", Toast.LENGTH_SHORT).show();
-                       Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                       startActivity(intent);
-                       finish();
-                       break;
-                   default:
-                       Toast.makeText(LoginActivity.this, "登录失败",Toast.LENGTH_SHORT).show();
-               }
-            }else if(message.what == 0x2222){
-                //发送验证码
-                switch (message.obj.toString()){
-                    case "send success":
-                        Toast.makeText(LoginActivity.this, "验证码已经发送 请查收", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "telephone is already to used":
-                        Toast.makeText(LoginActivity.this, "该手机已经被注册了", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "mobile_number_error":
-                        Toast.makeText(LoginActivity.this, "手机号不存在 请检查后重试", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "error":
-                        Toast.makeText(LoginActivity.this, "验证码请求失败 请稍后再试", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        Toast.makeText(LoginActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
-                }
-            }else if(message.what == 0x3333){
-                //注册
-                switch (message.obj.toString()){
-                    case "register_success":
-                        Toast.makeText(LoginActivity.this, "注册成功 ", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "telephone_repeat":
-                        Toast.makeText(LoginActivity.this, "注册失败 该号码已经注册过了", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "code_error":
-                        Toast.makeText(LoginActivity.this, "注册失败 验证码错误", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "code_overdue":
-                        Toast.makeText(LoginActivity.this, "注册失败 验证码过期", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        Toast.makeText(LoginActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
-                }
-            }else if (message.what == 0x1234) {
+        public void handleMessage(Message msg) {
+            if (msg.what == SystemParameter.ERROR){
+                Toast.makeText(LoginActivity.this, "网络错误 请检查网络", Toast.LENGTH_SHORT).show();
+            }else if (msg.what == LOGIN_SUCCESS){
+                Toast.makeText(LoginActivity.this, "欢迎回来", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+            }else if (msg.what == LOGIN_ACCOUNT_NOT_EXIST){
+                Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
+            }else if (msg.what == SEND_SUCCESS){
+                Toast.makeText(LoginActivity.this, "验证码已经发送 请查收", Toast.LENGTH_SHORT).show();
+            }else if (msg.what == TEL_IS_ALREADY_TO_USED){
+                Toast.makeText(LoginActivity.this, "该手机已经被注册了", Toast.LENGTH_SHORT).show();
+            }else if (msg.what == TEL_NUMBER_ERROR){
+                Toast.makeText(LoginActivity.this, "手机号错误 请检查后重试", Toast.LENGTH_SHORT).show();
+            }else if (msg.what == REGISTER_SUCCESS){
+                Toast.makeText(LoginActivity.this, "注册成功 ", Toast.LENGTH_SHORT).show();
+            }else if (msg.what == CODE_ERROR){
+                Toast.makeText(LoginActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();
+            }else if (msg.what == CODE_OVERDUE){
+                Toast.makeText(LoginActivity.this, "验证码过期", Toast.LENGTH_SHORT).show();
+            }else if (msg.what == UPDATEUI) {
                 Button button = findViewById(R.id.get_code_button);
                 if (button != null){
-                    Integer time = Integer.valueOf(message.obj.toString());
+                    Integer time = Integer.valueOf(msg.obj.toString());
                     if (time == 0) {
                         button.setText("获取验证码");
                         button.setClickable(true);

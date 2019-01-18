@@ -19,7 +19,10 @@ public class FooterHolder extends RecyclerView.ViewHolder {
         setData(1);
     }
 
-    //根据传过来的status控制哪个状态可见
+    /**
+     * 根据传过来的status控制哪个状态可见
+     * @param status 0都不可见 1加载 2加载完成 3错误
+     */
     public void setData(int status) {
         switch (status) {
             case 0:

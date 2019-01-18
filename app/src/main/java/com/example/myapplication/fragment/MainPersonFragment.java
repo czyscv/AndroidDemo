@@ -25,14 +25,11 @@ import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
 import com.example.myapplication.tool.BaseFragment;
-import com.example.myapplication.tool.MyPersonListAdapter;
+import com.example.myapplication.adapter.MyPersonListAdapter;
 import com.example.myapplication.tool.SystemParameter;
 import com.example.myapplication.tool.UserData;
 
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import jp.wasabeef.glide.transformations.internal.FastBlur;
 import jp.wasabeef.glide.transformations.internal.RSBlur;

@@ -1,4 +1,4 @@
-package com.example.myapplication.tool;
+package com.example.myapplication.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.MainComicLookActivity;
+import com.example.myapplication.tool.ComicData;
+import com.example.myapplication.tool.FooterHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +55,9 @@ public class MyChapterListAdapter extends RecyclerView.Adapter<RecyclerView.View
             VH viewHolder = (VH) holder;
             ComicData comicData = mDatas.get(position);
             String name = comicData.getName();
+            Integer page = comicData.getPageNum();
             viewHolder.chaptertitle.setText(name);
+            viewHolder.chapterpage.setText("页数："+page);
             //单击
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,9 +102,11 @@ public class MyChapterListAdapter extends RecyclerView.Adapter<RecyclerView.View
     //展示章节的ViewHolder
     private static class VH extends RecyclerView.ViewHolder{
         public final TextView chaptertitle;
+        public final TextView chapterpage;
         public VH(View v) {
             super(v);
-            chaptertitle = v.findViewById(R.id.details_list_name);
+            chaptertitle = v.findViewById(R.id.main_comic_details_list_name);
+            chapterpage = v.findViewById(R.id.main_comic_details_list_page);
         }
     }
 }

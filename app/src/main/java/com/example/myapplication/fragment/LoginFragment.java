@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.LoginActivity;
+import com.example.myapplication.activity.MainActivity;
 import com.example.myapplication.tool.BaseFragment;
 import com.example.myapplication.tool.MyOkhttp;
 import com.example.myapplication.tool.SystemParameter;
@@ -59,15 +60,12 @@ public class LoginFragment extends BaseFragment {
             MyOkhttp myOkhttp = new MyOkhttp();
             myOkhttp.setUrl("/user_info/login");
             myOkhttp.addParameter(new String[]{"account","password"},new String[]{userCode,password});
-            myOkhttp.myGetOkhttp();
+            myOkhttp.myPostOkhttp();
             myOkhttp.request(new Callback() {
                 //请求失败执行的方法
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Message message = Message.obtain();
-                    message.what = 0x1111;
-                    message.obj = "error";
-                    handler.sendMessage(message);
+                    handler.sendEmptyMessage(SystemParameter.ERROR);
                 }
                 //请求成功执行的方法
                 @Override
@@ -82,11 +80,10 @@ public class LoginFragment extends BaseFragment {
                         editor.apply();
                         SystemParameter.TOKEN = token;
                         SystemParameter.USERINFO = JSON.parseObject(jsonObject.getJSONObject("data").toJSONString(), UserData.class);
+                        handler.sendEmptyMessage(LoginActivity.LOGIN_SUCCESS);
+                    }else {
+                        handler.sendEmptyMessage(LoginActivity.LOGIN_ACCOUNT_NOT_EXIST);
                     }
-                    Message message = Message.obtain();
-                    message.what = 0x1111;
-                    message.obj = info;
-                    handler.sendMessage(message);
                 }
             });
         });

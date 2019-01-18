@@ -21,7 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
 import com.example.myapplication.tool.BaseActivity;
 import com.example.myapplication.tool.ComicData;
-import com.example.myapplication.tool.MyChapterListAdapter;
+import com.example.myapplication.adapter.MyChapterListAdapter;
 import com.example.myapplication.tool.MyOkhttp;
 import com.example.myapplication.tool.SystemParameter;
 
@@ -39,51 +39,38 @@ public class MainComicDetailsActivity extends BaseActivity {
     private Button comicComment;//评论按钮
     private RecyclerView chapterListView;
     private MyChapterListAdapter mChapterListAdapter;
+
+    private static final Integer IS_CONNECT = 0x9999;
+    private static final Integer NO_CONNECT = 0x9998;
+    private static final Integer ERROR_CONNECT = 0x9997;
+    private static final Integer DELETE_CONNECT = 0x9996;
+    private static final Integer SUCCESS_CONNECT = 0x9995;
+    private static final Integer REPATE_CONNECT = 0x9994;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 0x1111 ) {
-                //加载漫画列表
-                switch (msg.obj.toString()){
-                    case "success":
-                        mChapterListAdapter.notifyDataSetChanged();
-                        mChapterListAdapter.getFooterHolder().setData(2);
-                        break;
-                    default:
-                        Toast.makeText(MainComicDetailsActivity.this, "加载失败 数据错误", Toast.LENGTH_SHORT).show();
-                        finish();
-                }
-            }else if(msg.what == 0x2222){
-                //是否已收藏
-                switch (msg.obj.toString()){
-                    case "yes":
-                        isConnect();
-                        break;
-                    case "no":
-                        noConnect();
-                        break;
-                    default:
-                        noConnect();
-                }
-            }else if(msg.what == 0x3333){
-                //收藏和取消收藏
-                switch (msg.obj.toString()){
-                    case "delete":
-                        Toast.makeText(MainComicDetailsActivity.this, "漫画取消成功", Toast.LENGTH_SHORT).show();
-                        noConnect();
-                        break;
-                    case "success":
-                        Toast.makeText(MainComicDetailsActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
-                        isConnect();
-                        break;
-                    case "repate":
-                        Toast.makeText(MainComicDetailsActivity.this, "你已经收藏了该漫画", Toast.LENGTH_SHORT).show();
-                        isConnect();
-                        break;
-                    default:
-                        Toast.makeText(MainComicDetailsActivity.this, "加载失败 数据错误", Toast.LENGTH_SHORT).show();
-                        noConnect();
-                }
+            if (msg.what ==SystemParameter.ERROR){
+                Toast.makeText(MainComicDetailsActivity.this, "加载失败 检查网络", Toast.LENGTH_SHORT).show();
+                mChapterListAdapter.getFooterHolder().setData(3);
+            }else if (msg.what == SystemParameter.SUCCESS ) {
+                mChapterListAdapter.notifyDataSetChanged();
+                mChapterListAdapter.getFooterHolder().setData(2);
+            }else if (msg.what == IS_CONNECT){
+                isConnect();
+            }else if (msg.what == NO_CONNECT){
+                noConnect();
+            }else if (msg.what == ERROR_CONNECT){
+                Toast.makeText(MainComicDetailsActivity.this, "收藏状态加载失败", Toast.LENGTH_SHORT).show();
+                confirmConnect();
+            }else if (msg.what == DELETE_CONNECT){
+                Toast.makeText(MainComicDetailsActivity.this, "漫画取消成功", Toast.LENGTH_SHORT).show();
+                noConnect();
+            }else if (msg.what == SUCCESS_CONNECT){
+                Toast.makeText(MainComicDetailsActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                isConnect();
+            }else if (msg.what == REPATE_CONNECT){
+                Toast.makeText(MainComicDetailsActivity.this, "你已经收藏了该漫画", Toast.LENGTH_SHORT).show();
+                isConnect();
             }
         }
     };
@@ -93,6 +80,7 @@ public class MainComicDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_comic_details);
         initToolbar(R.id.main_comic_details_toolbar);
+        initData();
         initView();
     }
 
@@ -110,7 +98,6 @@ public class MainComicDetailsActivity extends BaseActivity {
         });
         comicComment = findViewById(R.id.main_comic_details_comment);
         chapterListView = findViewById(R.id.main_comic_details_chapterlist);
-        getdata();
         LinearLayoutManager layoutManager = new LinearLayoutManager(MainComicDetailsActivity.this);
         //设置为水平布局
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -121,36 +108,14 @@ public class MainComicDetailsActivity extends BaseActivity {
         //设置Adapter
         mChapterListAdapter = new MyChapterListAdapter(chapterInfoList,MainComicDetailsActivity.this);
         chapterListView.setAdapter(mChapterListAdapter);
-        //查询这部漫画是否被收藏
-        MyOkhttp myOkhttp = new MyOkhttp();
-        myOkhttp.setUrl("/collection_info/isConnect");
-        myOkhttp.addParameter(new String[]{"token","manId"}, new String[]{SystemParameter.TOKEN, comicData.getId().toString()});
-        myOkhttp.myGetOkhttp();
-        myOkhttp.request(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Message message = Message.obtain();
-                message.what = 0x2222;
-                message.obj = "no";
-                handler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                JSONObject jsonObject = JSON.parseObject(response.body().string());
-                String info = jsonObject.getString("info");
-                Message message = Message.obtain();
-                message.what = 0x2222;
-                message.obj = info;
-                handler.sendMessage(message);
-            }
-        });
     }
 
-    private void getdata(){
+    private void initData(){
         //接收item传来的对象json字符串
         String c = getIntent().getBundleExtra("data").getString("comic");
         comicData = JSON.parseObject(c,ComicData.class);
+        //判断收藏状态
+        confirmConnect();
         //绑定控件
         TextView comicname = findViewById(R.id.main_comic_details_title);
         ImageView comicimg = findViewById(R.id.main_comic_details_comicimg);
@@ -165,7 +130,7 @@ public class MainComicDetailsActivity extends BaseActivity {
         Glide.with(MainComicDetailsActivity.this).load(url).apply(options).into(comicimg);
         comictime.setText("上传时间："+comicData.getTime());
         comicauthor.setText("作者："+comicData.getAuthor());
-        comiclv.setText("限制等级："+comicData.getLimitLevel());
+        comiclv.setText("限制等级："+(comicData.getLimitLevel()==1?"注册用户":"会员用户"));
         comicpage.setText("章节数："+comicData.getPageNum());
         //获得漫画列表
         MyOkhttp myOkhttp = new MyOkhttp();
@@ -176,10 +141,7 @@ public class MainComicDetailsActivity extends BaseActivity {
             //请求失败执行的方法
             @Override
             public void onFailure(Call call, IOException e) {
-                Message message = Message.obtain();
-                message.what = 0x1111;
-                message.obj = "error";
-                handler.sendMessage(message);
+                handler.sendEmptyMessage(SystemParameter.ERROR);
             }
             //请求成功执行的方法
             @Override
@@ -188,22 +150,6 @@ public class MainComicDetailsActivity extends BaseActivity {
                 String info = jsonObject.getString("info");
                 if(info.equals("success")){
                     JSONObject data = jsonObject.getJSONObject("data");
-                    JSONObject comicinfo = data.getJSONObject("manInfo");
-                    //按照道理 这里应该比较数据一致性 这里省略
-//                    Integer id = comicinfo.getInteger("id");//ID
-//                    String name = comicinfo.getString("name");//名字
-//                    String author = comicinfo.getString("author");//作者
-//                    String path = comicinfo.getString("path");//相对路径
-//                    String time = comicinfo.getString("time");//上传时间
-//                    Integer limitLevel = comicinfo.getInteger("limitLevel");//限制等级
-//                    Integer pageNum = comicinfo.getInteger("pageNum");//页数
-//                    comicData.setId(id);
-//                    comicData.setName(name);
-//                    comicData.setAuthor(author);
-//                    comicData.setPath(path);
-//                    comicData.setTime(time);
-//                    comicData.setLimitLevel(limitLevel);
-//                    comicData.setPageNum(pageNum);
                     //漫画列表
                     JSONArray comicjsonArray = data.getJSONArray("chapterInfoList");
                     for(int i = 0; i<comicjsonArray.size();i++){
@@ -223,15 +169,32 @@ public class MainComicDetailsActivity extends BaseActivity {
                             chapterInfoList.add(sortValue,comicData);
                         }
                     }
-                    Message message = Message.obtain();
-                    message.what = 0x1111;
-                    message.obj = "success";
-                    handler.sendMessage(message);
+                    handler.sendEmptyMessage(SystemParameter.SUCCESS);
                 }else{
-                    Message message = Message.obtain();
-                    message.what = 0x1111;
-                    message.obj = "error";
-                    handler.sendMessage(message);
+                    handler.sendEmptyMessage(SystemParameter.ERROR);
+                }
+            }
+        });
+    }
+    private void confirmConnect(){
+        MyOkhttp myOkhttp = new MyOkhttp();
+        myOkhttp.setUrl("/collection_info/isConnect");
+        myOkhttp.addParameter(new String[]{"token","manId"}, new String[]{SystemParameter.TOKEN, comicData.getId().toString()});
+        myOkhttp.myGetOkhttp();
+        myOkhttp.request(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                handler.sendEmptyMessage(ERROR_CONNECT);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                JSONObject jsonObject = JSON.parseObject(response.body().string());
+                String info = jsonObject.getString("info");
+                if ("yes".equals(info)){
+                    handler.sendEmptyMessage(IS_CONNECT);
+                }else {
+                    handler.sendEmptyMessage(NO_CONNECT);
                 }
             }
         });
@@ -250,18 +213,12 @@ public class MainComicDetailsActivity extends BaseActivity {
                 myOkhttp.request(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Message message = Message.obtain();
-                        message.what = 0x1111;
-                        message.obj = "error";
-                        handler.sendMessage(message);
+                        handler.sendEmptyMessage(ERROR_CONNECT);
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Message message = Message.obtain();
-                        message.what = 0x3333;
-                        message.obj = "delete";
-                        handler.sendMessage(message);
+                        handler.sendEmptyMessage(DELETE_CONNECT);
                     }
                 });
             }
@@ -280,20 +237,20 @@ public class MainComicDetailsActivity extends BaseActivity {
                 myOkhttp.request(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Message message = Message.obtain();
-                        message.what = 0x1111;
-                        message.obj = "error";
-                        handler.sendMessage(message);
+                        handler.sendEmptyMessage(ERROR_CONNECT);
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         JSONObject jsonObject = JSON.parseObject(response.body().string());
                         String info = jsonObject.getString("info");
-                        Message message = Message.obtain();
-                        message.what = 0x3333;
-                        message.obj = info;
-                        handler.sendMessage(message);
+                        if ("success".equals(info)){
+                            handler.sendEmptyMessage(SUCCESS_CONNECT);
+                        }else if ("repate".equals(info)){
+                            handler.sendEmptyMessage(REPATE_CONNECT);
+                        }else{
+                            handler.sendEmptyMessage(ERROR_CONNECT);
+                        }
                     }
                 });
             }

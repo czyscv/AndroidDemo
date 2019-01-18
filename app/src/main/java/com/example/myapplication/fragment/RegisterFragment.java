@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.activity.LoginActivity;
 import com.example.myapplication.tool.BaseFragment;
 import com.example.myapplication.tool.MyOkhttp;
+import com.example.myapplication.tool.SystemParameter;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -61,7 +63,7 @@ public class RegisterFragment extends BaseFragment {
                     @Override
                     public void run() {
                         Message message = Message.obtain();
-                        message.what = 0x1234;
+                        message.what = LoginActivity.UPDATEUI;
                         message.obj = time;
                         handler.sendMessage(message);
                         if(time>0){
@@ -82,20 +84,22 @@ public class RegisterFragment extends BaseFragment {
                     //请求失败执行的方法
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Message message = Message.obtain();
-                        message.what = 0x2222;
-                        message.obj = "error";
-                        handler.sendMessage(message);
+                        handler.sendEmptyMessage(SystemParameter.ERROR);
                     }
                     //请求成功执行的方法
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         JSONObject jsonObject = JSON.parseObject(response.body().string());
                         String info = jsonObject.getString("info");
-                        Message message = Message.obtain();
-                        message.what = 0x2222;
-                        message.obj = info;
-                        handler.sendMessage(message);
+                        if ("send success".equals(info)){
+                            handler.sendEmptyMessage(LoginActivity.SEND_SUCCESS);
+                        }else if ("telephone is already to used".equals(info)){
+                            handler.sendEmptyMessage(LoginActivity.TEL_IS_ALREADY_TO_USED);
+                        }else if ("mobile_number_error".equals(info)){
+                            handler.sendEmptyMessage(LoginActivity.TEL_NUMBER_ERROR);
+                        }else{
+                            handler.sendEmptyMessage(LoginActivity.TEL_IS_ALREADY_TO_USED);
+                        }
                     }
                 });
             }
@@ -128,28 +132,29 @@ public class RegisterFragment extends BaseFragment {
                 MyOkhttp myOkhttp = new MyOkhttp();
                 myOkhttp.setUrl("/user_info/register");
                 myOkhttp.addParameter(new String[]{"telephone","password","code"}, new String[]{phone,password,code});
-                myOkhttp.myGetOkhttp();
+                myOkhttp.myPostOkhttp();
                 myOkhttp.request(new Callback() {
                     //请求失败执行的方法
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Message message = Message.obtain();
-                        message.what = 0x3333;
-                        message.obj = "error";
-                        handler.sendMessage(message);
+                        handler.sendEmptyMessage(SystemParameter.ERROR);
                     }
                     //请求成功执行的方法
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         JSONObject jsonObject = JSON.parseObject(response.body().string());
                         String info = jsonObject.getString("info");
-                        if ("send success".equals(info)){
-
+                        if ("register_success".equals(info)){
+                            handler.sendEmptyMessage(LoginActivity.REGISTER_SUCCESS);
+                        }else if ("telephone_repeat".equals(info)){
+                            handler.sendEmptyMessage(LoginActivity.TEL_IS_ALREADY_TO_USED);
+                        }else if ("code_error".equals(info)){
+                            handler.sendEmptyMessage(LoginActivity.CODE_ERROR);
+                        }else if ("code_overdue".equals(info)){
+                            handler.sendEmptyMessage(LoginActivity.CODE_OVERDUE);
+                        }else {
+                            handler.sendEmptyMessage(LoginActivity.CODE_ERROR);
                         }
-                        Message message = Message.obtain();
-                        message.what = 0x3333;
-                        message.obj = info;
-                        handler.sendMessage(message);
                     }
                 });
             }

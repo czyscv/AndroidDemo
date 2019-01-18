@@ -12,8 +12,6 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.fragment.MainDashboardFragment;
 import com.example.myapplication.fragment.MainHomeFragment;
 import com.example.myapplication.fragment.MainPersonFragment;
@@ -21,18 +19,11 @@ import com.example.myapplication.fragment.MainSearchFragment;
 import com.example.myapplication.tool.BaseActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.tool.BottomNavigationViewHelper;
-import com.example.myapplication.tool.MyFragmentAdapter;
-import com.example.myapplication.tool.MyOkhttp;
+import com.example.myapplication.adapter.MyFragmentAdapter;
 import com.example.myapplication.tool.SystemParameter;
-import com.example.myapplication.tool.UserData;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 
 public class MainActivity extends BaseActivity {
@@ -42,45 +33,19 @@ public class MainActivity extends BaseActivity {
     private List<Fragment> list = new ArrayList<>();
     private MenuItem menuItem;
     private Boolean isExit = false;//两次退出的指针
-    private static final int COMIC_DASHBOARD = 0x1111;
+
+    public static final Integer NO_EXIT = 0x9999;
+    public static final int COMIC_DASHBOARD = 0x1111;
     private Handler mainHandler = new Handler(){
         @Override
-        public void handleMessage(Message message) {
-            if (message.what == 0x0000){
-                switch (message.obj.toString()){
-                    case "noExit":
-                        //取消退出
-                        isExit = false;
-                        break;
-                    case "error":
-                        Toast.makeText(MainActivity.this, "数据错误",Toast.LENGTH_SHORT).show();
-                        goLogin();
-                        break;
-                    case "not_login":
-                        Toast.makeText(MainActivity.this, "您还没有登录",Toast.LENGTH_SHORT).show();
-                        goLogin();
-                        break;
-                }
-            }else if (message.what == COMIC_DASHBOARD ) {
-                //加载漫画列表
-                switch (message.obj.toString()){
-                    case "error":
-                        Toast.makeText(MainActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "updateUI":
-                        MainDashboardFragment mainDashboardFragment = (MainDashboardFragment)list.get(2);
-                        mainDashboardFragment.updateUI();
-                        break;
-                    case "updateOK":
-                        Toast.makeText(MainActivity.this, "刷新完成", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "not_login":
-                        Toast.makeText(MainActivity.this, "您还没有登录",Toast.LENGTH_SHORT).show();
-                        goLogin();
-                        break;
-                    default:
-                        Toast.makeText(MainActivity.this, "网络错误",Toast.LENGTH_SHORT).show();
-                }
+        public void handleMessage(Message msg) {
+            if (msg.what == NO_EXIT){
+                isExit = false;
+            }else if (msg.what == SystemParameter.ERROR){
+                Toast.makeText(MainActivity.this, "请求失败 检查网络",Toast.LENGTH_SHORT).show();
+            }else if (msg.what == SystemParameter.NO_LOGIN){
+                Toast.makeText(MainActivity.this, "您还没有登录 无法访问",Toast.LENGTH_SHORT).show();
+//                goLogin();
             }
         }
     };
@@ -197,10 +162,7 @@ public class MainActivity extends BaseActivity {
             if(!isExit){
                 isExit=true;
                 Toast.makeText(MainActivity.this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
-                Message message = Message.obtain();
-                message.what = 0x0000;
-                message.obj = "noExit";
-                mainHandler.sendMessageAtTime(message,1500);
+                mainHandler.sendEmptyMessageAtTime(NO_EXIT, 2000);
             }else{
                 finish();
                 System.exit(0);
@@ -210,7 +172,7 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    //让下层fragment得到handler
+    //让其他页面得到handler
     public Handler getActivityHandler() {
         return mainHandler;
     }

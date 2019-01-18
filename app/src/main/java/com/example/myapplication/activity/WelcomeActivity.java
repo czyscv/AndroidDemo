@@ -25,10 +25,10 @@ import okhttp3.Response;
 
 public class WelcomeActivity extends BaseActivity {
     private static final int TIME = 3000;
-    private static final int GO_GUIDE = 100;
-    private static final int GO_LOGIN= 101;
-    private static final int GO_MAIN = 102;
-    private static final int GO_MAIN_ERROR= 103;
+    private static final int GO_GUIDE = 0x9999;
+    private static final int GO_LOGIN= 0x9998;
+    private static final int GO_MAIN = 0x9997;
+    private static final int GO_MAIN_ERROR= 0x9996;
 
     Handler handler = new Handler() {
         @Override

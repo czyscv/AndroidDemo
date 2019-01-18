@@ -1,4 +1,4 @@
-package com.example.myapplication.tool;
+package com.example.myapplication.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.MainComicDetailsActivity;
+import com.example.myapplication.tool.ComicData;
+import com.example.myapplication.tool.FooterHolder;
+import com.example.myapplication.tool.SystemParameter;
 
 import java.util.ArrayList;
 import java.util.List;
