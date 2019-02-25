@@ -35,6 +35,7 @@ public class GuideActivity extends BaseActivity {
 
     @Override
     protected void setStatusColor() {
+	System.out.println("hello world");
         StatusBarUtil.setColor(this, Color.parseColor("#00FFFFFF"));
     }
 
